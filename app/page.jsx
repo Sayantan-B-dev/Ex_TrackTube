@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 import AddPlaylistModal from "../components/AddPlaylistModal";
@@ -12,12 +12,31 @@ export default function Home() {
   const { core, dispatch, playlists } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleAdd = (playlist, videos) => {
     dispatch({ type: "add", playlist, videos });
   };
 
   const deleting = deleteId ? playlists.find((p) => p.id === deleteId) : null;
+
+  if (!mounted) {
+    return (
+      <div className="page">
+        <NavBar onAddPlaylist={() => setModalOpen(true)} />
+        <main className="container">
+          <div className="page-head">
+            <h1>Your playlists</h1>
+            <p>Loading…</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="page">

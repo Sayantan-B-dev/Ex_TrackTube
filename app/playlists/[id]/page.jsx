@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import NavBar from "../../../components/NavBar";
@@ -19,6 +19,11 @@ export default function PlaylistPage() {
   const [search, setSearch] = useState("");
   const [filterTab, setFilterTab] = useState("all");
   const [confirm, setConfirm] = useState(null); // "markAll" | "clearAll" | "reset"
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const playlist = core.playlists?.[id];
   const data = core.data?.[id];
@@ -45,6 +50,17 @@ export default function PlaylistPage() {
       return true;
     });
   }, [videos, search, filterTab, markedSet]);
+
+  if (!mounted) {
+    return (
+      <div className="page">
+        <NavBar onAddPlaylist={() => setModalOpen(true)} />
+        <main className="main">
+          <p className="empty-text">Loading playlist…</p>
+        </main>
+      </div>
+    );
+  }
 
   if (!playlist || !data) {
     return (
