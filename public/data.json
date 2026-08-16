@@ -1,0 +1,836 @@
+{
+  "playlist": "Next.js 15 Tutorial - Beginner to Advanced",
+  "channel": "Codevolution",
+  "playlistUrl": "https://www.youtube.com/playlist?list=PLC3y8-rFHvwhIEc4I4YsRz5C7GOBnxSJY",
+  "totalVideos": 92,
+  "videos": [
+    {
+      "index": 1,
+      "id": "b4ba60j_4o8",
+      "title": "Next.js 15 Tutorial - 1 - Introduction",
+      "duration": 256,
+      "durationString": "4:16",
+      "url": "https://www.youtube.com/watch?v=b4ba60j_4o8",
+      "thumbnail": "https://i.ytimg.com/vi/b4ba60j_4o8/hqdefault.jpg"
+    },
+    {
+      "index": 2,
+      "id": "xiSuX0f1mEI",
+      "title": "Next.js 15 Tutorial - 2 - Hello World",
+      "duration": 192,
+      "durationString": "3:12",
+      "url": "https://www.youtube.com/watch?v=xiSuX0f1mEI",
+      "thumbnail": "https://i.ytimg.com/vi/xiSuX0f1mEI/hqdefault.jpg"
+    },
+    {
+      "index": 3,
+      "id": "L0g87N0piT0",
+      "title": "Next.js 15 Tutorial - 3 - Project Structure",
+      "duration": 259,
+      "durationString": "4:19",
+      "url": "https://www.youtube.com/watch?v=L0g87N0piT0",
+      "thumbnail": "https://i.ytimg.com/vi/L0g87N0piT0/hqdefault.jpg"
+    },
+    {
+      "index": 4,
+      "id": "7DC3ZrxvUUU",
+      "title": "Next.js 15 Tutorial - 4 - Before We Start",
+      "duration": 111,
+      "durationString": "1:51",
+      "url": "https://www.youtube.com/watch?v=7DC3ZrxvUUU",
+      "thumbnail": "https://i.ytimg.com/vi/7DC3ZrxvUUU/hqdefault.jpg"
+    },
+    {
+      "index": 5,
+      "id": "9602Yzvd7ik",
+      "title": "Next.js 15 Tutorial - 5 - Routing",
+      "duration": 350,
+      "durationString": "5:50",
+      "url": "https://www.youtube.com/watch?v=9602Yzvd7ik",
+      "thumbnail": "https://i.ytimg.com/vi/9602Yzvd7ik/hqdefault.jpg"
+    },
+    {
+      "index": 6,
+      "id": "H7JjKjkC33c",
+      "title": "Next.js 15 Tutorial - 6 - Nested Routes",
+      "duration": 178,
+      "durationString": "2:58",
+      "url": "https://www.youtube.com/watch?v=H7JjKjkC33c",
+      "thumbnail": "https://i.ytimg.com/vi/H7JjKjkC33c/hqdefault.jpg"
+    },
+    {
+      "index": 7,
+      "id": "k9g6aVLH3p4",
+      "title": "Next.js 15 Tutorial - 7 - Dynamic Routes",
+      "duration": 365,
+      "durationString": "6:05",
+      "url": "https://www.youtube.com/watch?v=k9g6aVLH3p4",
+      "thumbnail": "https://i.ytimg.com/vi/k9g6aVLH3p4/hqdefault.jpg"
+    },
+    {
+      "index": 8,
+      "id": "edrJf0GKfAI",
+      "title": "Next.js 15 Tutorial - 8 - Nested Dynamic Routes",
+      "duration": 219,
+      "durationString": "3:39",
+      "url": "https://www.youtube.com/watch?v=edrJf0GKfAI",
+      "thumbnail": "https://i.ytimg.com/vi/edrJf0GKfAI/hqdefault.jpg"
+    },
+    {
+      "index": 9,
+      "id": "d46hLIg1B3Q",
+      "title": "Next.js 15 Tutorial - 9 - Catch all Segments",
+      "duration": 375,
+      "durationString": "6:15",
+      "url": "https://www.youtube.com/watch?v=d46hLIg1B3Q",
+      "thumbnail": "https://i.ytimg.com/vi/d46hLIg1B3Q/hqdefault.jpg"
+    },
+    {
+      "index": 10,
+      "id": "GCipVDqBD3k",
+      "title": "Next.js 15 Tutorial - 10 - Not Found Page",
+      "duration": 319,
+      "durationString": "5:19",
+      "url": "https://www.youtube.com/watch?v=GCipVDqBD3k",
+      "thumbnail": "https://i.ytimg.com/vi/GCipVDqBD3k/hqdefault.jpg"
+    },
+    {
+      "index": 11,
+      "id": "fpOinVG85Pk",
+      "title": "Next.js 15 Tutorial - 11 - File Colocation",
+      "duration": 173,
+      "durationString": "2:53",
+      "url": "https://www.youtube.com/watch?v=fpOinVG85Pk",
+      "thumbnail": "https://i.ytimg.com/vi/fpOinVG85Pk/hqdefault.jpg"
+    },
+    {
+      "index": 12,
+      "id": "nJjs3wrji5s",
+      "title": "Next.js 15 Tutorial - 12 - Private Folders",
+      "duration": 169,
+      "durationString": "2:49",
+      "url": "https://www.youtube.com/watch?v=nJjs3wrji5s",
+      "thumbnail": "https://i.ytimg.com/vi/nJjs3wrji5s/hqdefault.jpg"
+    },
+    {
+      "index": 13,
+      "id": "auXXk38rGgk",
+      "title": "Next.js 15 Tutorial - 13 - Route Groups",
+      "duration": 239,
+      "durationString": "3:59",
+      "url": "https://www.youtube.com/watch?v=auXXk38rGgk",
+      "thumbnail": "https://i.ytimg.com/vi/auXXk38rGgk/hqdefault.jpg"
+    },
+    {
+      "index": 14,
+      "id": "NK-8a8EzWrU",
+      "title": "Next.js 15 Tutorial - 14 - Layouts",
+      "duration": 270,
+      "durationString": "4:30",
+      "url": "https://www.youtube.com/watch?v=NK-8a8EzWrU",
+      "thumbnail": "https://i.ytimg.com/vi/NK-8a8EzWrU/hqdefault.jpg"
+    },
+    {
+      "index": 15,
+      "id": "TzF2RKFjRyk",
+      "title": "Next.js 15 Tutorial - 15 - Nested Layouts",
+      "duration": 237,
+      "durationString": "3:57",
+      "url": "https://www.youtube.com/watch?v=TzF2RKFjRyk",
+      "thumbnail": "https://i.ytimg.com/vi/TzF2RKFjRyk/hqdefault.jpg"
+    },
+    {
+      "index": 16,
+      "id": "KZC6TRG3Mks",
+      "title": "Next.js 15 Tutorial - 16 - Multiple Root Layouts",
+      "duration": 206,
+      "durationString": "3:26",
+      "url": "https://www.youtube.com/watch?v=KZC6TRG3Mks",
+      "thumbnail": "https://i.ytimg.com/vi/KZC6TRG3Mks/hqdefault.jpg"
+    },
+    {
+      "index": 17,
+      "id": "OldUurB0Wx8",
+      "title": "Next.js 15 Tutorial - 17 - Routing Metadata",
+      "duration": 488,
+      "durationString": "8:08",
+      "url": "https://www.youtube.com/watch?v=OldUurB0Wx8",
+      "thumbnail": "https://i.ytimg.com/vi/OldUurB0Wx8/hqdefault.jpg"
+    },
+    {
+      "index": 18,
+      "id": "dckNsCjnV9A",
+      "title": "Next.js 15 Tutorial - 18 - title Metadata",
+      "duration": 192,
+      "durationString": "3:12",
+      "url": "https://www.youtube.com/watch?v=dckNsCjnV9A",
+      "thumbnail": "https://i.ytimg.com/vi/dckNsCjnV9A/hqdefault.jpg"
+    },
+    {
+      "index": 19,
+      "id": "9y7E44zHiGM",
+      "title": "Next.js 15 Tutorial - 19 - Link Component",
+      "duration": 303,
+      "durationString": "5:03",
+      "url": "https://www.youtube.com/watch?v=9y7E44zHiGM",
+      "thumbnail": "https://i.ytimg.com/vi/9y7E44zHiGM/hqdefault.jpg"
+    },
+    {
+      "index": 20,
+      "id": "aJjMeCUvZ0E",
+      "title": "Next.js 15 Tutorial - 20 - Active Links",
+      "duration": 237,
+      "durationString": "3:57",
+      "url": "https://www.youtube.com/watch?v=aJjMeCUvZ0E",
+      "thumbnail": "https://i.ytimg.com/vi/aJjMeCUvZ0E/hqdefault.jpg"
+    },
+    {
+      "index": 21,
+      "id": "qPsY4AKFlnM",
+      "title": "Next.js 15 Tutorial - 21 - params and searchParams",
+      "duration": 342,
+      "durationString": "5:42",
+      "url": "https://www.youtube.com/watch?v=qPsY4AKFlnM",
+      "thumbnail": "https://i.ytimg.com/vi/qPsY4AKFlnM/hqdefault.jpg"
+    },
+    {
+      "index": 22,
+      "id": "Z9P6UveWGKc",
+      "title": "Next.js 15 Tutorial - 22 - Navigating Programmatically",
+      "duration": 241,
+      "durationString": "4:01",
+      "url": "https://www.youtube.com/watch?v=Z9P6UveWGKc",
+      "thumbnail": "https://i.ytimg.com/vi/Z9P6UveWGKc/hqdefault.jpg"
+    },
+    {
+      "index": 23,
+      "id": "yfww2kplO-k",
+      "title": "Next.js 15 Tutorial - 23 - Templates",
+      "duration": 231,
+      "durationString": "3:51",
+      "url": "https://www.youtube.com/watch?v=yfww2kplO-k",
+      "thumbnail": "https://i.ytimg.com/vi/yfww2kplO-k/hqdefault.jpg"
+    },
+    {
+      "index": 24,
+      "id": "0OVg4ikUaz0",
+      "title": "Next.js 15 Tutorial - 24 - Loading UI",
+      "duration": 196,
+      "durationString": "3:16",
+      "url": "https://www.youtube.com/watch?v=0OVg4ikUaz0",
+      "thumbnail": "https://i.ytimg.com/vi/0OVg4ikUaz0/hqdefault.jpg"
+    },
+    {
+      "index": 25,
+      "id": "fWV5WPSbgdg",
+      "title": "Next.js 15 Tutorial - 25 - Error Handling",
+      "duration": 308,
+      "durationString": "5:08",
+      "url": "https://www.youtube.com/watch?v=fWV5WPSbgdg",
+      "thumbnail": "https://i.ytimg.com/vi/fWV5WPSbgdg/hqdefault.jpg"
+    },
+    {
+      "index": 26,
+      "id": "15beQR0DFMQ",
+      "title": "Next.js 15 Tutorial - 26 - Recovering from Errors",
+      "duration": 173,
+      "durationString": "2:53",
+      "url": "https://www.youtube.com/watch?v=15beQR0DFMQ",
+      "thumbnail": "https://i.ytimg.com/vi/15beQR0DFMQ/hqdefault.jpg"
+    },
+    {
+      "index": 27,
+      "id": "ZPpNu0ybNZM",
+      "title": "Next.js 15 Tutorial - 27 - Handling Errors in Nested Routes",
+      "duration": 130,
+      "durationString": "2:10",
+      "url": "https://www.youtube.com/watch?v=ZPpNu0ybNZM",
+      "thumbnail": "https://i.ytimg.com/vi/ZPpNu0ybNZM/hqdefault.jpg"
+    },
+    {
+      "index": 28,
+      "id": "-OAVelXX5sE",
+      "title": "Next.js 15 Tutorial - 28 - Handling Errors in Layouts",
+      "duration": 133,
+      "durationString": "2:13",
+      "url": "https://www.youtube.com/watch?v=-OAVelXX5sE",
+      "thumbnail": "https://i.ytimg.com/vi/-OAVelXX5sE/hqdefault.jpg"
+    },
+    {
+      "index": 29,
+      "id": "ywUDMEVR3Mg",
+      "title": "Next.js 15 Tutorial - 29 - Handling Global Errors",
+      "duration": 331,
+      "durationString": "5:31",
+      "url": "https://www.youtube.com/watch?v=ywUDMEVR3Mg",
+      "thumbnail": "https://i.ytimg.com/vi/ywUDMEVR3Mg/hqdefault.jpg"
+    },
+    {
+      "index": 30,
+      "id": "697kNwfU-4M",
+      "title": "Next.js 15 Tutorial - 30 - Parallel Routes",
+      "duration": 514,
+      "durationString": "8:34",
+      "url": "https://www.youtube.com/watch?v=697kNwfU-4M",
+      "thumbnail": "https://i.ytimg.com/vi/697kNwfU-4M/hqdefault.jpg"
+    },
+    {
+      "index": 31,
+      "id": "N2Hjwj5ibjQ",
+      "title": "Next.js 15 Tutorial - 31 - Unmatched Routes",
+      "duration": 382,
+      "durationString": "6:22",
+      "url": "https://www.youtube.com/watch?v=N2Hjwj5ibjQ",
+      "thumbnail": "https://i.ytimg.com/vi/N2Hjwj5ibjQ/hqdefault.jpg"
+    },
+    {
+      "index": 32,
+      "id": "P-_P3J11_bE",
+      "title": "Next.js 15 Tutorial - 32 - Conditional Routes",
+      "duration": 163,
+      "durationString": "2:43",
+      "url": "https://www.youtube.com/watch?v=P-_P3J11_bE",
+      "thumbnail": "https://i.ytimg.com/vi/P-_P3J11_bE/hqdefault.jpg"
+    },
+    {
+      "index": 33,
+      "id": "FTiwIVxWC00",
+      "title": "Next.js 15 Tutorial - 33 - Intercepting Routes",
+      "duration": 803,
+      "durationString": "13:23",
+      "url": "https://www.youtube.com/watch?v=FTiwIVxWC00",
+      "thumbnail": "https://i.ytimg.com/vi/FTiwIVxWC00/hqdefault.jpg"
+    },
+    {
+      "index": 34,
+      "id": "U6aRqv7rzQ8",
+      "title": "Next.js 15 Tutorial - 34 - Parallel Intercepting Routes",
+      "duration": 340,
+      "durationString": "5:40",
+      "url": "https://www.youtube.com/watch?v=U6aRqv7rzQ8",
+      "thumbnail": "https://i.ytimg.com/vi/U6aRqv7rzQ8/hqdefault.jpg"
+    },
+    {
+      "index": 35,
+      "id": "27Uj6BeIDV0",
+      "title": "Next.js 15 Tutorial - 35 - Route Handlers",
+      "duration": 349,
+      "durationString": "5:49",
+      "url": "https://www.youtube.com/watch?v=27Uj6BeIDV0",
+      "thumbnail": "https://i.ytimg.com/vi/27Uj6BeIDV0/hqdefault.jpg"
+    },
+    {
+      "index": 36,
+      "id": "bD_Be8WiFvg",
+      "title": "Next.js 15 Tutorial - 36 - Handling GET Requests",
+      "duration": 175,
+      "durationString": "2:55",
+      "url": "https://www.youtube.com/watch?v=bD_Be8WiFvg",
+      "thumbnail": "https://i.ytimg.com/vi/bD_Be8WiFvg/hqdefault.jpg"
+    },
+    {
+      "index": 37,
+      "id": "jkJ7JtQ2x5Y",
+      "title": "Next.js 15 Tutorial - 37 - Handling POST Requests",
+      "duration": 215,
+      "durationString": "3:35",
+      "url": "https://www.youtube.com/watch?v=jkJ7JtQ2x5Y",
+      "thumbnail": "https://i.ytimg.com/vi/jkJ7JtQ2x5Y/hqdefault.jpg"
+    },
+    {
+      "index": 38,
+      "id": "EBkKNzJURJM",
+      "title": "Next.js 15 Tutorial - 38 - Dynamic Route Handlers",
+      "duration": 215,
+      "durationString": "3:35",
+      "url": "https://www.youtube.com/watch?v=EBkKNzJURJM",
+      "thumbnail": "https://i.ytimg.com/vi/EBkKNzJURJM/hqdefault.jpg"
+    },
+    {
+      "index": 39,
+      "id": "rlHkm-Rbo74",
+      "title": "Next.js 15 Tutorial - 39 - Handling PATCH Requests",
+      "duration": 189,
+      "durationString": "3:09",
+      "url": "https://www.youtube.com/watch?v=rlHkm-Rbo74",
+      "thumbnail": "https://i.ytimg.com/vi/rlHkm-Rbo74/hqdefault.jpg"
+    },
+    {
+      "index": 40,
+      "id": "Rv92ysl9tOQ",
+      "title": "Next.js 15 Tutorial - 40 - Handling DELETE Requests",
+      "duration": 172,
+      "durationString": "2:52",
+      "url": "https://www.youtube.com/watch?v=Rv92ysl9tOQ",
+      "thumbnail": "https://i.ytimg.com/vi/Rv92ysl9tOQ/hqdefault.jpg"
+    },
+    {
+      "index": 41,
+      "id": "LvRLbeBYkuo",
+      "title": "Next.js 15 Tutorial - 41 - URL Query Parameters",
+      "duration": 179,
+      "durationString": "2:59",
+      "url": "https://www.youtube.com/watch?v=LvRLbeBYkuo",
+      "thumbnail": "https://i.ytimg.com/vi/LvRLbeBYkuo/hqdefault.jpg"
+    },
+    {
+      "index": 42,
+      "id": "xshMFZRXDPM",
+      "title": "Next.js 15 Tutorial - 42 - Headers in Route Handlers",
+      "duration": 342,
+      "durationString": "5:42",
+      "url": "https://www.youtube.com/watch?v=xshMFZRXDPM",
+      "thumbnail": "https://i.ytimg.com/vi/xshMFZRXDPM/hqdefault.jpg"
+    },
+    {
+      "index": 43,
+      "id": "7KEwSiD7VxY",
+      "title": "Next.js 15 Tutorial - 43 - Cookies in Route Handlers",
+      "duration": 209,
+      "durationString": "3:29",
+      "url": "https://www.youtube.com/watch?v=7KEwSiD7VxY",
+      "thumbnail": "https://i.ytimg.com/vi/7KEwSiD7VxY/hqdefault.jpg"
+    },
+    {
+      "index": 44,
+      "id": "L0iIzarEQ6Q",
+      "title": "Next.js 15 Tutorial - 44 - Redirects in Route Handlers",
+      "duration": 93,
+      "durationString": "1:33",
+      "url": "https://www.youtube.com/watch?v=L0iIzarEQ6Q",
+      "thumbnail": "https://i.ytimg.com/vi/L0iIzarEQ6Q/hqdefault.jpg"
+    },
+    {
+      "index": 45,
+      "id": "1afNuqtb7q8",
+      "title": "Next.js 15 Tutorial - 45 - Caching in Route Handlers",
+      "duration": 264,
+      "durationString": "4:24",
+      "url": "https://www.youtube.com/watch?v=1afNuqtb7q8",
+      "thumbnail": "https://i.ytimg.com/vi/1afNuqtb7q8/hqdefault.jpg"
+    },
+    {
+      "index": 46,
+      "id": "t1KTTZbqCm0",
+      "title": "Next.js 15 Tutorial - 46 - Middleware",
+      "duration": 377,
+      "durationString": "6:17",
+      "url": "https://www.youtube.com/watch?v=t1KTTZbqCm0",
+      "thumbnail": "https://i.ytimg.com/vi/t1KTTZbqCm0/hqdefault.jpg"
+    },
+    {
+      "index": 47,
+      "id": "6-qMfLcPhOw",
+      "title": "Next.js 15 Tutorial -  47 - Rendering",
+      "duration": 86,
+      "durationString": "1:26",
+      "url": "https://www.youtube.com/watch?v=6-qMfLcPhOw",
+      "thumbnail": "https://i.ytimg.com/vi/6-qMfLcPhOw/hqdefault.jpg"
+    },
+    {
+      "index": 48,
+      "id": "-FIUWaYXmTU",
+      "title": "Next.js 15 Tutorial - 48 - Client-side Rendering (CSR)",
+      "duration": 199,
+      "durationString": "3:19",
+      "url": "https://www.youtube.com/watch?v=-FIUWaYXmTU",
+      "thumbnail": "https://i.ytimg.com/vi/-FIUWaYXmTU/hqdefault.jpg"
+    },
+    {
+      "index": 49,
+      "id": "R8ZwbehCGP0",
+      "title": "Next.js 15 Tutorial - 49 - Server-side Rendering (SSR)",
+      "duration": 295,
+      "durationString": "4:55",
+      "url": "https://www.youtube.com/watch?v=R8ZwbehCGP0",
+      "thumbnail": "https://i.ytimg.com/vi/R8ZwbehCGP0/hqdefault.jpg"
+    },
+    {
+      "index": 50,
+      "id": "cwjsoOZVK34",
+      "title": "Next.js 15 Tutorial - 50 - Suspense SSR",
+      "duration": 393,
+      "durationString": "6:33",
+      "url": "https://www.youtube.com/watch?v=cwjsoOZVK34",
+      "thumbnail": "https://i.ytimg.com/vi/cwjsoOZVK34/hqdefault.jpg"
+    },
+    {
+      "index": 51,
+      "id": "Nnr6w8vamUo",
+      "title": "Next.js 15 Tutorial - 51 - React Server Components",
+      "duration": 396,
+      "durationString": "6:36",
+      "url": "https://www.youtube.com/watch?v=Nnr6w8vamUo",
+      "thumbnail": "https://i.ytimg.com/vi/Nnr6w8vamUo/hqdefault.jpg"
+    },
+    {
+      "index": 52,
+      "id": "dMCSiA5gzkU",
+      "title": "Next.js 15 Tutorial - 52 - Server and Client Components",
+      "duration": 379,
+      "durationString": "6:19",
+      "url": "https://www.youtube.com/watch?v=dMCSiA5gzkU",
+      "thumbnail": "https://i.ytimg.com/vi/dMCSiA5gzkU/hqdefault.jpg"
+    },
+    {
+      "index": 53,
+      "id": "aZAMP-4Szgg",
+      "title": "Next.js 15 Tutorial - 53 - RSC Rendering Lifecycle",
+      "duration": 216,
+      "durationString": "3:36",
+      "url": "https://www.youtube.com/watch?v=aZAMP-4Szgg",
+      "thumbnail": "https://i.ytimg.com/vi/aZAMP-4Szgg/hqdefault.jpg"
+    },
+    {
+      "index": 54,
+      "id": "O6VFEwHujW0",
+      "title": "Next.js 15 Tutorial - 54 - Static Rendering",
+      "duration": 673,
+      "durationString": "11:13",
+      "url": "https://www.youtube.com/watch?v=O6VFEwHujW0",
+      "thumbnail": "https://i.ytimg.com/vi/O6VFEwHujW0/hqdefault.jpg"
+    },
+    {
+      "index": 55,
+      "id": "Zmi8Ad8TBYY",
+      "title": "Next.js 15 Tutorial - 55 - Dynamic Rendering",
+      "duration": 288,
+      "durationString": "4:48",
+      "url": "https://www.youtube.com/watch?v=Zmi8Ad8TBYY",
+      "thumbnail": "https://i.ytimg.com/vi/Zmi8Ad8TBYY/hqdefault.jpg"
+    },
+    {
+      "index": 56,
+      "id": "09aGB_Q6cqE",
+      "title": "Next.js 15 Tutorial - 56 - generateStaticParams",
+      "duration": 325,
+      "durationString": "5:25",
+      "url": "https://www.youtube.com/watch?v=09aGB_Q6cqE",
+      "thumbnail": "https://i.ytimg.com/vi/09aGB_Q6cqE/hqdefault.jpg"
+    },
+    {
+      "index": 57,
+      "id": "oEF3dyNgmcs",
+      "title": "Next.js 15 Tutorial - 57 - dynamicParams",
+      "duration": 220,
+      "durationString": "3:40",
+      "url": "https://www.youtube.com/watch?v=oEF3dyNgmcs",
+      "thumbnail": "https://i.ytimg.com/vi/oEF3dyNgmcs/hqdefault.jpg"
+    },
+    {
+      "index": 58,
+      "id": "oSf1gUDGJOA",
+      "title": "Next.js 15 Tutorial - 58 - Streaming",
+      "duration": 173,
+      "durationString": "2:53",
+      "url": "https://www.youtube.com/watch?v=oSf1gUDGJOA",
+      "thumbnail": "https://i.ytimg.com/vi/oSf1gUDGJOA/hqdefault.jpg"
+    },
+    {
+      "index": 59,
+      "id": "HQcxPCDwTuE",
+      "title": "Next.js 15 Tutorial - 59 - Server and Client Composition Patterns",
+      "duration": 67,
+      "durationString": "1:07",
+      "url": "https://www.youtube.com/watch?v=HQcxPCDwTuE",
+      "thumbnail": "https://i.ytimg.com/vi/HQcxPCDwTuE/hqdefault.jpg"
+    },
+    {
+      "index": 60,
+      "id": "BmcGheLzzT0",
+      "title": "Next.js 15 Tutorial - 60 - Server-only Code",
+      "duration": 309,
+      "durationString": "5:09",
+      "url": "https://www.youtube.com/watch?v=BmcGheLzzT0",
+      "thumbnail": "https://i.ytimg.com/vi/BmcGheLzzT0/hqdefault.jpg"
+    },
+    {
+      "index": 61,
+      "id": "FJvUhHiihIQ",
+      "title": "Next.js 15 Tutorial - 61 - Third Party Packages",
+      "duration": 293,
+      "durationString": "4:53",
+      "url": "https://www.youtube.com/watch?v=FJvUhHiihIQ",
+      "thumbnail": "https://i.ytimg.com/vi/FJvUhHiihIQ/hqdefault.jpg"
+    },
+    {
+      "index": 62,
+      "id": "ebOgXUPG3_k",
+      "title": "Next.js 15 Tutorial - 62 - Context Providers",
+      "duration": 309,
+      "durationString": "5:09",
+      "url": "https://www.youtube.com/watch?v=ebOgXUPG3_k",
+      "thumbnail": "https://i.ytimg.com/vi/ebOgXUPG3_k/hqdefault.jpg"
+    },
+    {
+      "index": 63,
+      "id": "zVRVMTTVHes",
+      "title": "Next.js 15 Tutorial - 63 - Client-only Code",
+      "duration": 256,
+      "durationString": "4:16",
+      "url": "https://www.youtube.com/watch?v=zVRVMTTVHes",
+      "thumbnail": "https://i.ytimg.com/vi/zVRVMTTVHes/hqdefault.jpg"
+    },
+    {
+      "index": 64,
+      "id": "yJNuVay1SHw",
+      "title": "Next.js 15 Tutorial - 64 - Client Component Placement",
+      "duration": 295,
+      "durationString": "4:55",
+      "url": "https://www.youtube.com/watch?v=yJNuVay1SHw",
+      "thumbnail": "https://i.ytimg.com/vi/yJNuVay1SHw/hqdefault.jpg"
+    },
+    {
+      "index": 65,
+      "id": "PM_STAq4MSg",
+      "title": "Next.js 15 Tutorial - 65 - Interleaving Server and Client Components",
+      "duration": 493,
+      "durationString": "8:13",
+      "url": "https://www.youtube.com/watch?v=PM_STAq4MSg",
+      "thumbnail": "https://i.ytimg.com/vi/PM_STAq4MSg/hqdefault.jpg"
+    },
+    {
+      "index": 66,
+      "id": "DRsU93Lde2k",
+      "title": "Next.js 15 Tutorial - 66 - Data Fetching",
+      "duration": 95,
+      "durationString": "1:35",
+      "url": "https://www.youtube.com/watch?v=DRsU93Lde2k",
+      "thumbnail": "https://i.ytimg.com/vi/DRsU93Lde2k/hqdefault.jpg"
+    },
+    {
+      "index": 67,
+      "id": "7Kz4--kCBP0",
+      "title": "Next.js 15 Tutorial - 67 - Fetching Data in Client Components",
+      "duration": 252,
+      "durationString": "4:12",
+      "url": "https://www.youtube.com/watch?v=7Kz4--kCBP0",
+      "thumbnail": "https://i.ytimg.com/vi/7Kz4--kCBP0/hqdefault.jpg"
+    },
+    {
+      "index": 68,
+      "id": "WKfPctdIDek",
+      "title": "Next.js 15 Tutorial - 68 - Fetching Data in Server Components",
+      "duration": 261,
+      "durationString": "4:21",
+      "url": "https://www.youtube.com/watch?v=WKfPctdIDek",
+      "thumbnail": "https://i.ytimg.com/vi/WKfPctdIDek/hqdefault.jpg"
+    },
+    {
+      "index": 69,
+      "id": "jdLSKIzvKnk",
+      "title": "Next.js 15 Tutorial - 69 - Loading and Error States",
+      "duration": 178,
+      "durationString": "2:58",
+      "url": "https://www.youtube.com/watch?v=jdLSKIzvKnk",
+      "thumbnail": "https://i.ytimg.com/vi/jdLSKIzvKnk/hqdefault.jpg"
+    },
+    {
+      "index": 70,
+      "id": "Fo4BZtzV2xQ",
+      "title": "Next.js 15 Tutorial - 70 - Sequential Data Fetching",
+      "duration": 327,
+      "durationString": "5:27",
+      "url": "https://www.youtube.com/watch?v=Fo4BZtzV2xQ",
+      "thumbnail": "https://i.ytimg.com/vi/Fo4BZtzV2xQ/hqdefault.jpg"
+    },
+    {
+      "index": 71,
+      "id": "TLcuO9anpPo",
+      "title": "Next.js 15 Tutorial - 71 - Parallel Data Fetching",
+      "duration": 356,
+      "durationString": "5:56",
+      "url": "https://www.youtube.com/watch?v=TLcuO9anpPo",
+      "thumbnail": "https://i.ytimg.com/vi/TLcuO9anpPo/hqdefault.jpg"
+    },
+    {
+      "index": 72,
+      "id": "IUeSwzvz9i4",
+      "title": "Next.js 15 Tutorial - 72 - Fetching from a Database",
+      "duration": 393,
+      "durationString": "6:33",
+      "url": "https://www.youtube.com/watch?v=IUeSwzvz9i4",
+      "thumbnail": "https://i.ytimg.com/vi/IUeSwzvz9i4/hqdefault.jpg"
+    },
+    {
+      "index": 73,
+      "id": "F8DB4LM1dME",
+      "title": "Next.js 15 Tutorial - 73 - Data Mutations",
+      "duration": 193,
+      "durationString": "3:13",
+      "url": "https://www.youtube.com/watch?v=F8DB4LM1dME",
+      "thumbnail": "https://i.ytimg.com/vi/F8DB4LM1dME/hqdefault.jpg"
+    },
+    {
+      "index": 74,
+      "id": "xWFbnrTap3M",
+      "title": "Next.js 15 Tutorial - 74 - Forms with Server Actions",
+      "duration": 355,
+      "durationString": "5:55",
+      "url": "https://www.youtube.com/watch?v=xWFbnrTap3M",
+      "thumbnail": "https://i.ytimg.com/vi/xWFbnrTap3M/hqdefault.jpg"
+    },
+    {
+      "index": 75,
+      "id": "o3M7RmsyiBU",
+      "title": "Next.js 15 Tutorial - 75 - Pending State with useFormStatus",
+      "duration": 216,
+      "durationString": "3:36",
+      "url": "https://www.youtube.com/watch?v=o3M7RmsyiBU",
+      "thumbnail": "https://i.ytimg.com/vi/o3M7RmsyiBU/hqdefault.jpg"
+    },
+    {
+      "index": 76,
+      "id": "4-3K7SgoVf4",
+      "title": "Next.js 15 Tutorial - 76 - Form Validation with useActionState",
+      "duration": 416,
+      "durationString": "6:56",
+      "url": "https://www.youtube.com/watch?v=4-3K7SgoVf4",
+      "thumbnail": "https://i.ytimg.com/vi/4-3K7SgoVf4/hqdefault.jpg"
+    },
+    {
+      "index": 77,
+      "id": "UiQpt9b_ei4",
+      "title": "Next.js 15 Tutorial - 77 - Separating Server Actions",
+      "duration": 213,
+      "durationString": "3:33",
+      "url": "https://www.youtube.com/watch?v=UiQpt9b_ei4",
+      "thumbnail": "https://i.ytimg.com/vi/UiQpt9b_ei4/hqdefault.jpg"
+    },
+    {
+      "index": 78,
+      "id": "qpA-eGxASxo",
+      "title": "Next.js 15 Tutorial - 78 - useFormStatus vs useActionState",
+      "duration": 97,
+      "durationString": "1:37",
+      "url": "https://www.youtube.com/watch?v=qpA-eGxASxo",
+      "thumbnail": "https://i.ytimg.com/vi/qpA-eGxASxo/hqdefault.jpg"
+    },
+    {
+      "index": 79,
+      "id": "SbaKEqCRcDE",
+      "title": "Next.js 15 Tutorial - 79 - Update Server Action",
+      "duration": 534,
+      "durationString": "8:54",
+      "url": "https://www.youtube.com/watch?v=SbaKEqCRcDE",
+      "thumbnail": "https://i.ytimg.com/vi/SbaKEqCRcDE/hqdefault.jpg"
+    },
+    {
+      "index": 80,
+      "id": "oi71gLPFQtk",
+      "title": "Next.js 15 Tutorial - 80 - Delete Server Action",
+      "duration": 212,
+      "durationString": "3:32",
+      "url": "https://www.youtube.com/watch?v=oi71gLPFQtk",
+      "thumbnail": "https://i.ytimg.com/vi/oi71gLPFQtk/hqdefault.jpg"
+    },
+    {
+      "index": 81,
+      "id": "ipmfUw8I2qc",
+      "title": "Next.js 15 Tutorial - 81 - Optimistic Updates",
+      "duration": 378,
+      "durationString": "6:18",
+      "url": "https://www.youtube.com/watch?v=ipmfUw8I2qc",
+      "thumbnail": "https://i.ytimg.com/vi/ipmfUw8I2qc/hqdefault.jpg"
+    },
+    {
+      "index": 82,
+      "id": "8CYDkIncDSw",
+      "title": "Next.js 15 Tutorial - 82 - Form Component",
+      "duration": 462,
+      "durationString": "7:42",
+      "url": "https://www.youtube.com/watch?v=8CYDkIncDSw",
+      "thumbnail": "https://i.ytimg.com/vi/8CYDkIncDSw/hqdefault.jpg"
+    },
+    {
+      "index": 83,
+      "id": "X3CHpXpeQ0c",
+      "title": "Next.js 15 Tutorial - 83 - Authentication",
+      "duration": 146,
+      "durationString": "2:26",
+      "url": "https://www.youtube.com/watch?v=X3CHpXpeQ0c",
+      "thumbnail": "https://i.ytimg.com/vi/X3CHpXpeQ0c/hqdefault.jpg"
+    },
+    {
+      "index": 84,
+      "id": "GXIjfcYeDog",
+      "title": "Next.js 15 Tutorial - 84 - Clerk Setup",
+      "duration": 179,
+      "durationString": "2:59",
+      "url": "https://www.youtube.com/watch?v=GXIjfcYeDog",
+      "thumbnail": "https://i.ytimg.com/vi/GXIjfcYeDog/hqdefault.jpg"
+    },
+    {
+      "index": 85,
+      "id": "Qm-1PwZeUhU",
+      "title": "Next.js 15 Tutorial - 85 - Sign in and Sign out",
+      "duration": 185,
+      "durationString": "3:05",
+      "url": "https://www.youtube.com/watch?v=Qm-1PwZeUhU",
+      "thumbnail": "https://i.ytimg.com/vi/Qm-1PwZeUhU/hqdefault.jpg"
+    },
+    {
+      "index": 86,
+      "id": "DmuwoBrYuIE",
+      "title": "Next.js 15 Tutorial - 86 - Profile Settings",
+      "duration": 189,
+      "durationString": "3:09",
+      "url": "https://www.youtube.com/watch?v=DmuwoBrYuIE",
+      "thumbnail": "https://i.ytimg.com/vi/DmuwoBrYuIE/hqdefault.jpg"
+    },
+    {
+      "index": 87,
+      "id": "ZIqa2hS0X6k",
+      "title": "Next.js 15 Tutorial - 87 - Conditional UI Rendering",
+      "duration": 96,
+      "durationString": "1:36",
+      "url": "https://www.youtube.com/watch?v=ZIqa2hS0X6k",
+      "thumbnail": "https://i.ytimg.com/vi/ZIqa2hS0X6k/hqdefault.jpg"
+    },
+    {
+      "index": 88,
+      "id": "O4LhNvL5N28",
+      "title": "Next.js 15 Tutorial - 88 - Protecting Routes",
+      "duration": 239,
+      "durationString": "3:59",
+      "url": "https://www.youtube.com/watch?v=O4LhNvL5N28",
+      "thumbnail": "https://i.ytimg.com/vi/O4LhNvL5N28/hqdefault.jpg"
+    },
+    {
+      "index": 89,
+      "id": "lUqOhq3YxnQ",
+      "title": "Next.js 15 Tutorial - 89 - Read Session and User Data",
+      "duration": 304,
+      "durationString": "5:04",
+      "url": "https://www.youtube.com/watch?v=lUqOhq3YxnQ",
+      "thumbnail": "https://i.ytimg.com/vi/lUqOhq3YxnQ/hqdefault.jpg"
+    },
+    {
+      "index": 90,
+      "id": "aY5Mq-3UemY",
+      "title": "Next.js 15 Tutorial - 90 - Role Based Access Control",
+      "duration": 672,
+      "durationString": "11:12",
+      "url": "https://www.youtube.com/watch?v=aY5Mq-3UemY",
+      "thumbnail": "https://i.ytimg.com/vi/aY5Mq-3UemY/hqdefault.jpg"
+    },
+    {
+      "index": 91,
+      "id": "AocT--scISg",
+      "title": "Next.js 15 Tutorial - 91 - Customizing Clerk Components",
+      "duration": 400,
+      "durationString": "6:40",
+      "url": "https://www.youtube.com/watch?v=AocT--scISg",
+      "thumbnail": "https://i.ytimg.com/vi/AocT--scISg/hqdefault.jpg"
+    },
+    {
+      "index": 92,
+      "id": "eJBQqzXmTeM",
+      "title": "Next.js 15 Tutorial - 92 - Deploying Next.js Apps to Vercel",
+      "duration": 164,
+      "durationString": "2:44",
+      "url": "https://www.youtube.com/watch?v=eJBQqzXmTeM",
+      "thumbnail": "https://i.ytimg.com/vi/eJBQqzXmTeM/hqdefault.jpg"
+    }
+  ]
+}
