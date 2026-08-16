@@ -4,6 +4,9 @@ import { DEFAULT_THEME, THEME_STORAGE_KEY } from "../lib/themes";
 export const metadata = {
   title: "TrackTube",
   description: "Track your progress across any YouTube playlist",
+  icons: {
+    icon: "/images/logo.svg",
+  },
 };
 
 export default function RootLayout({ children }) {

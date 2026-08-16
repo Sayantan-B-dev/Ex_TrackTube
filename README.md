@@ -1,8 +1,18 @@
 # TrackTube
 
+<p align="center">
+  <img src="public/images/logo.svg" alt="TrackTube logo" width="96" />
+</p>
+
 Track your progress across any YouTube playlist — with a retro pixel-art UI.
 
 Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-dlp**, and lets you mark videos as watched while live-counting your marked time, remaining time and progress — all persisted in your browser's **localStorage**. No accounts, no database.
+
+## Screenshots
+
+| Dashboard | Playlist tracker |
+| --- | --- |
+| <img src="public/images/home.png" alt="TrackTube dashboard" width="480" /> | <img src="public/images/playlistpage.png" alt="TrackTube playlist page" width="480" /> |
 
 ## Features
 
