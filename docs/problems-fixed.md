@@ -126,3 +126,18 @@ Every issue encountered during development, root cause, and the fix. Each entry 
 **Lesson:** When embedding a tool like yt-dlp in a serverless deploy, always use the *standalone* per-platform artifacts, not the generic source/script asset — and validate the file format before exec.
 
 **Verified:** after commit `e40e12d`, a real playlist fetch from production (`tracktube2.vercel.app`) succeeds end-to-end.
+
+## 15. Commits not counted on the GitHub contribution graph
+
+**Symptom:** All 17 commits of this repo existed on `main`, but GitHub's contribution graph showed zero of them. The GitHub API showed the commits' top-level `author` as `null`.
+
+**Cause:** The commits were authored with a local-only identity `TrackTube <dev@tracktube.local>`. GitHub attributes a commit to an account only when the commit's **author email matches a verified email on that account** (and the commit is on the repository's default branch). `dev@tracktube.local` is not a real address and can't be verified — so the commits existed but belonged to nobody.
+
+**Fix:** Rewrote the history so every commit uses a real GitHub-linked identity, then force-pushed:
+- Rewritten all 17 commits (they all carried the fake identity) with `git filter-branch --env-filter` — when `GIT_AUTHOR_EMAIL`/`GIT_COMMITTER_EMAIL` equaled `dev@tracktube.local`, replace `GIT_AUTHOR_NAME`/`GIT_COMMITTER_NAME` with `Sayantan-B-Dev` and the email with the account's real address. Empty `--tag-name-filter cat` since the repo has no tags; a plain `git push --force origin main` followed (single-branch, solo repo — history rewrite is safe here).
+- GitHub only counts commits authored with an email that is **added and verified** in Settings → Emails, so the email must exist there; re-scan is not instant (can take a few hours).
+
+**Lessons:**
+- Always commit with the identity you want on GitHub: set `git config user.name` / `user.email` (or the repo-local equivalents) once instead of overriding per-commit. Ideally use Git's `--local` config or the GitHub **private noreply address** (`<ID>+<username>@users.noreply.github.com`).
+- Before this incident, a clone that had written `dev@tracktube.local` into `package.json`? No — the identity came only from per-commit `-c user.name / user.email` overrides; the real fix is committing with a proper identity from the start.
+- Rewriting history changes all commit SHAs — other clones must re-sync (`git fetch` + `git reset --hard origin/main`). Reasonable only on a solo repo with no other collaborators.
