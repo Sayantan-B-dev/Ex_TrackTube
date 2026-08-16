@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "postinstall": "node node_modules/youtube-dl-exec/scripts/postinstall.js"
+    "postinstall": "node scripts/install-ytdlp.mjs"
   },
   "dependencies": {
     "next": "^15.5.23",
