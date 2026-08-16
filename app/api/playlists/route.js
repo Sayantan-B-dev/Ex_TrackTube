@@ -1,5 +1,5 @@
 import { checkRateLimit, recordFetch } from "../../../lib/rateLimit";
-import { fetchPlaylist } from "../../../lib/playlist";
+import { fetchPlaylist, validatePlaylistUrl } from "../../../lib/playlist";
 
 export const runtime = "nodejs";
 
@@ -16,6 +16,16 @@ export async function POST(req) {
     return Response.json({ error: "bad_request", message: "Missing playlist URL." }, { status: 400 });
   }
 
+  if (!validatePlaylistUrl(url)) {
+    return Response.json(
+      {
+        error: "bad_request",
+        message: "Please enter a valid YouTube playlist link (e.g. https://www.youtube.com/playlist?list=...)",
+      },
+      { status: 400 }
+    );
+  }
+
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     req.headers.get("x-real-ip") ||
@@ -29,8 +39,6 @@ export async function POST(req) {
     );
   }
 
-  recordFetch(ip);
-
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     start(controller) {
@@ -39,6 +47,7 @@ export async function POST(req) {
           const result = await fetchPlaylist(url, (p) => {
             controller.enqueue(encoder.encode(JSON.stringify({ type: "progress", ...p }) + "\n"));
           });
+          recordFetch(ip);
           controller.enqueue(encoder.encode(JSON.stringify({ type: "done", data: result }) + "\n"));
         } catch (err) {
           controller.enqueue(

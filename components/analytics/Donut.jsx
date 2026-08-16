@@ -5,18 +5,27 @@ export default function Donut({ pct, markedSeconds, totalSeconds }) {
   return (
     <div className="donut-wrap">
       <svg width={170} height={170} viewBox="0 0 170 170">
-        <circle cx={85} cy={85} r={r} fill="none" stroke="var(--border)" strokeWidth={14} />
         <circle
           cx={85}
           cy={85}
           r={r}
           fill="none"
-          stroke={pct >= 100 ? "var(--success)" : "var(--accent)"}
+          strokeWidth={14}
+          style={{ stroke: "var(--border)" }}
+        />
+        <circle
+          cx={85}
+          cy={85}
+          r={r}
+          fill="none"
           strokeWidth={14}
           strokeLinecap="round"
           strokeDasharray={`${filled} ${c - filled}`}
           transform="rotate(-90 85 85)"
-          style={{ transition: "stroke-dasharray .3s ease, stroke .3s ease" }}
+          style={{
+            stroke: pct >= 100 ? "var(--success)" : "var(--accent)",
+            transition: "stroke-dasharray .3s ease, stroke .3s ease",
+          }}
         />
       </svg>
       <div className="donut-center">

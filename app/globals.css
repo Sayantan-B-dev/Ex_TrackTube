@@ -461,6 +461,8 @@ a {
   box-shadow: 3px 3px 0 var(--shadow);
   transition: transform 0.05s, box-shadow 0.05s, border-color 0.15s;
   text-transform: uppercase;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:hover {
@@ -1064,6 +1066,8 @@ a {
   font-family: inherit;
   box-shadow: 3px 3px 0 var(--shadow);
   transition: border-color 0.15s, background 0.15s, transform 0.05s, box-shadow 0.05s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .video-card:hover {
@@ -1167,6 +1171,12 @@ a {
 
 /* ---------- responsive ---------- */
 
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 310px;
+  }
+}
+
 @media (max-width: 640px) {
   .container {
     padding: 20px 14px 60px;
@@ -1192,6 +1202,10 @@ a {
   .btn {
     padding: 8px 12px;
     font-size: 9px;
+  }
+
+  .modal {
+    max-width: 100%;
   }
 }
 
@@ -1219,5 +1233,30 @@ a {
   .video-thumb {
     width: 120px;
     height: 68px;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-card {
+    flex-wrap: wrap;
+  }
+
+  .video-thumb {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-status {
+    display: none;
+  }
+
+  .empty-state {
+    margin: 30px auto 0;
+    padding: 50px 16px;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -126,7 +126,7 @@ export default function PlaylistPage() {
           onMarkAll={() => setConfirm("markAll")}
           onClearAll={() => setConfirm("clearAll")}
           onResetProgress={() => setConfirm("reset")}
-          savedAt={null}
+          savedAt={progress.savedAt}
         />
         <main className="main">
           <div className="main-bar">
