@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ThemePicker from "./ThemePicker";
 
 export default function NavBar({ onAddPlaylist }) {
   return (
@@ -11,9 +12,12 @@ export default function NavBar({ onAddPlaylist }) {
         </span>
         <span>TrackTube</span>
       </Link>
-      <button className="btn btn-primary" onClick={onAddPlaylist}>
-        + Add playlist
-      </button>
+      <div className="navbar-actions">
+        <ThemePicker />
+        <button className="btn btn-primary" onClick={onAddPlaylist}>
+          + Add playlist
+        </button>
+      </div>
     </header>
   );
 }
