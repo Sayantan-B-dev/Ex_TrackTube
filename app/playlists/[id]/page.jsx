@@ -1,6 +1,9 @@
 "use client";
 
-export default function Home() {
+import { useParams } from "next/navigation";
+
+export default function PlaylistPage() {
+  const params = useParams();
   return (
     <div
       style={{
@@ -12,8 +15,8 @@ export default function Home() {
         gap: 12,
       }}
     >
-      <h1>TrackTube</h1>
-      <p>Dashboard coming in the next phase.</p>
+      <h1>Playlist: {params.id}</h1>
+      <p>Playlist view coming in the next phase.</p>
     </div>
   );
 }

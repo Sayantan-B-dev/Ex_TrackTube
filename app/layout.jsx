@@ -1,8 +1,6 @@
-import "./globals.css";
-
 export const metadata = {
-  title: "Playlist Tracker",
-  description: "Select videos and track total watch time",
+  title: "TrackTube",
+  description: "Track your progress across any YouTube playlist",
 };
 
 export default function RootLayout({ children }) {
