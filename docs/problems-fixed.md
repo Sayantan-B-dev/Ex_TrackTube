@@ -97,3 +97,32 @@ Every issue encountered during development, root cause, and the fix. Each entry 
 **Cause:** `validatePlaylistUrl` only recognized `/playlist` paths.
 
 **Fix:** Validation accepts any `youtube.com`/`youtu.be` URL carrying a `list` query param; yt-dlp extracts the playlist correctly from these links.
+
+## 13. Vercel: `spawn yt-dlp ENOENT` on `/api/playlists`
+
+**Symptom:** Deployed app threw `[Error: spawn yt-dlp ENOENT]` (errno -2) on every playlist fetch. Works locally on Windows where yt-dlp is installed on PATH.
+
+**Cause:** Vercel serverless functions don't have yt-dlp (or any arbitrary system tool) installed, and nothing bundled one into the lambda.
+
+**Fix (3 attempts):**
+1. **Bundle `youtube-dl-exec`** (`npm i youtube-dl-exec`) — its postinstall downloads the binary at install time; `lib/playlist.js` resolved the binary via the package's `constants.YOUTUBE_DL_PATH`. *Still failed:* Next bundles route handlers; the package's `__dirname`-relative path no longer pointed at the real binary inside the bundle.
+2. **Keep the package external + trace it into the lambda** (`serverExternalPackages: ["youtube-dl-exec"]`, `outputFileTracingIncludes` for `/api/playlists`), plus a runtime fallback that downloads yt-dlp to `/tmp` from GitHub releases. *Still failed* — but with a new error (see #14).
+3. **Use the correct standalone binary** (see #14). Final design:
+   - `scripts/install-ytdlp.mjs` runs as the root `postinstall` and downloads the **platform-specific standalone binary** into `node_modules/youtube-dl-exec/bin/` at build time (so it ships inside the lambda via tracing).
+   - `lib/playlist.js` resolves: bundled standalone binary (validated by magic bytes) → package constants → runtime download to `/tmp` (per-instance, cached) → system `yt-dlp` (local dev).
+   - `next.config.mjs`: `serverExternalPackages: ["youtube-dl-exec"]` + `outputFileTracingIncludes` keep the binary on disk in the lambda instead of bundling it into a chunk.
+
+## 14. Vercel: `env: 'python3': No such file or directory`
+
+**Symptom:** After attempt 2, spawning "yt-dlp" failed with `env: 'python3': No such file or directory` — a new error, but from the same fetch.
+
+**Cause:** The GitHub release asset named `yt-dlp` (extensionless, unix) is the **Python script** (shebang `#!/usr/bin/env python3`), not a compiled binary. `youtube-dl-exec`'s own postinstall and our first download code both picked that asset on unix. Vercel's Node runtime has no `python3`, so the shebang failed before execution. The standalone Linux build is a separate asset: `yt-dlp_linux` (PyInstaller, ELF, no runtime deps).
+
+**Fix:**
+- `platformAssetName()` picks the right asset per platform: `yt-dlp.exe` (win32), `yt-dlp_macos` (darwin), `yt-dlp_linux` (linux x64), `yt-dlp_linux_aarch64`, `yt-dlp_linux_armv7l`.
+- `isRealBinary()` checks the first 4 bytes for ELF (`\x7fELF`) or PE (`MZ`) magic — the Python script is detected and never executed; this also protects against a corrupted/mismatched bundled file.
+- Both the build-time installer and the runtime `/tmp` fallback use the platform asset name.
+
+**Lesson:** When embedding a tool like yt-dlp in a serverless deploy, always use the *standalone* per-platform artifacts, not the generic source/script asset — and validate the file format before exec.
+
+**Verified:** after commit `e40e12d`, a real playlist fetch from production (`tracktube2.vercel.app`) succeeds end-to-end.
