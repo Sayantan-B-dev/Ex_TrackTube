@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import NavBar from "../../../components/NavBar";
 import AddPlaylistModal from "../../../components/AddPlaylistModal";
+import ConfirmModal from "../../../components/ConfirmModal";
 import Sidebar from "../../../components/Sidebar";
 import VideoList from "../../../components/VideoList";
 import { useCore } from "../../../lib/useCore";
@@ -17,6 +18,7 @@ export default function PlaylistPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filterTab, setFilterTab] = useState("all");
+  const [confirm, setConfirm] = useState(null); // "markAll" | "clearAll" | "reset"
 
   const playlist = core.playlists?.[id];
   const data = core.data?.[id];
@@ -65,6 +67,34 @@ export default function PlaylistPage() {
 
   const handleToggle = (videoId) => dispatch({ type: "toggle", id, videoId });
 
+  const confirmConfig = {
+    markAll: {
+      title: "Mark all videos",
+      message: `All ${videos.length} videos will be marked as watched. This adds ${formatDuration(stats.totalSeconds)} to your progress.`,
+      confirmLabel: "Mark all",
+    },
+    clearAll: {
+      title: "Clear all marks",
+      message: `All ${markedIds.length} marked videos will be unmarked, removing ${formatDuration(stats.markedSeconds)} from your progress.`,
+      confirmLabel: "Clear all",
+    },
+    reset: {
+      title: "Reset progress",
+      message:
+        "Your selection will be wiped and progress goes back to 0%. This cannot be undone.",
+      confirmLabel: "Reset",
+      danger: true,
+    },
+  }[confirm];
+
+  const runConfirm = () => {
+    if (confirm === "markAll")
+      dispatch({ type: "markAll", id, videoIds: videos.map((v) => v.id) });
+    else if (confirm === "clearAll" || confirm === "reset")
+      dispatch({ type: "clear", id });
+    setConfirm(null);
+  };
+
   return (
     <div className="page">
       <NavBar onAddPlaylist={() => setModalOpen(true)} />
@@ -72,6 +102,15 @@ export default function PlaylistPage() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onAdd={() => {}}
+      />
+      <ConfirmModal
+        open={!!confirm}
+        title={confirmConfig?.title}
+        message={confirmConfig?.message}
+        confirmLabel={confirmConfig?.confirmLabel}
+        danger={confirmConfig?.danger}
+        onCancel={() => setConfirm(null)}
+        onConfirm={runConfirm}
       />
       <div className="layout">
         <Sidebar
@@ -84,9 +123,9 @@ export default function PlaylistPage() {
           setSearch={setSearch}
           filterTab={filterTab}
           setFilterTab={setFilterTab}
-          onMarkAll={() => dispatch({ type: "markAll", id, videoIds: videos.map((v) => v.id) })}
-          onClearAll={() => dispatch({ type: "clear", id })}
-          onResetProgress={() => dispatch({ type: "clear", id })}
+          onMarkAll={() => setConfirm("markAll")}
+          onClearAll={() => setConfirm("clearAll")}
+          onResetProgress={() => setConfirm("reset")}
           savedAt={null}
         />
         <main className="main">

@@ -690,6 +690,27 @@ body {
   overflow: hidden;
 }
 
+.modal-sm {
+  max-width: 380px;
+}
+
+.confirm-message {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.btn-danger-solid {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.btn-danger-solid:hover {
+  border-color: #f87171;
+  background: #f87171;
+}
+
 .modal-header {
   display: flex;
   align-items: center;

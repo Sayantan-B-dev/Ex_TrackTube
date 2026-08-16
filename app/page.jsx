@@ -4,21 +4,20 @@ import { useState } from "react";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 import AddPlaylistModal from "../components/AddPlaylistModal";
+import ConfirmModal from "../components/ConfirmModal";
 import { useCore } from "../lib/useCore";
 import { formatDuration, humanize } from "../lib/format";
 
 export default function Home() {
   const { core, dispatch, playlists } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const handleAdd = (playlist, videos) => {
     dispatch({ type: "add", playlist, videos });
   };
 
-  const handleDelete = (id) => {
-    if (!window.confirm("Delete this playlist and its progress?")) return;
-    dispatch({ type: "delete", id });
-  };
+  const deleting = deleteId ? playlists.find((p) => p.id === deleteId) : null;
 
   return (
     <div className="page">
@@ -27,6 +26,18 @@ export default function Home() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onAdd={handleAdd}
+      />
+      <ConfirmModal
+        open={!!deleteId}
+        title="Delete playlist"
+        message={`“${deleting?.title || ""}” and all of its saved progress will be permanently removed from this browser. This cannot be undone.`}
+        confirmLabel="Delete"
+        danger
+        onCancel={() => setDeleteId(null)}
+        onConfirm={() => {
+          dispatch({ type: "delete", id: deleteId });
+          setDeleteId(null);
+        }}
       />
 
       <main className="container">
@@ -68,7 +79,7 @@ export default function Home() {
                     </Link>
                     <button
                       className="btn btn-icon btn-danger"
-                      onClick={() => handleDelete(p.id)}
+                      onClick={() => setDeleteId(p.id)}
                       aria-label="Delete playlist"
                       title="Delete playlist"
                     >
