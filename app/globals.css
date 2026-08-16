@@ -1169,6 +1169,149 @@ a {
   font-size: 20px;
 }
 
+/* ---------- footer ---------- */
+
+.footer {
+  border-top: 4px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 -4px 0 var(--shadow);
+  padding: 18px 24px;
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+.footer-brand {
+  font-family: "Press Start 2P", monospace;
+  font-size: 9px;
+  color: var(--text);
+}
+
+.footer-links {
+  display: flex;
+  gap: 18px;
+}
+
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.footer-copy {
+  font-size: 15px;
+}
+
+/* ---------- about page ---------- */
+
+.page-scroll {
+  overflow-y: auto;
+}
+
+.container-narrow {
+  max-width: 760px;
+}
+
+.about-section {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 3px dashed var(--border);
+}
+
+.about-section .side-section-title {
+  margin-bottom: 14px;
+}
+
+.about-text {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.about-card {
+  background: var(--panel);
+  border: 3px solid var(--border);
+  box-shadow: 3px 3px 0 var(--shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-card h3 {
+  font-size: 10px;
+}
+
+.about-card p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.about-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.about-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.about-badge {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  padding: 5px 12px;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-links a {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  padding: 6px 12px;
+  font-size: 16px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.about-links a:hover {
+  border-color: var(--accent);
+}
+
+.about-inline-link {
+  color: var(--accent);
+}
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 1200px) {

@@ -13,6 +13,9 @@ export default function NavBar({ onAddPlaylist }) {
         <span>TrackTube</span>
       </Link>
       <div className="navbar-actions">
+        <Link href="/about" className="btn">
+          About
+        </Link>
         <ThemePicker />
         <button className="btn btn-primary" onClick={onAddPlaylist}>
           + Add playlist

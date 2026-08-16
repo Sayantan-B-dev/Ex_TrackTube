@@ -5,6 +5,7 @@ import Link from "next/link";
 import NavBar from "../components/NavBar";
 import AddPlaylistModal from "../components/AddPlaylistModal";
 import ConfirmModal from "../components/ConfirmModal";
+import Footer from "../components/Footer";
 import { useCore } from "../lib/useCore";
 import { formatDuration, humanize } from "../lib/format";
 
@@ -134,6 +135,7 @@ export default function Home() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }
