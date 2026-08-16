@@ -1,3 +1,4 @@
+import "./globals.css";
 import { DEFAULT_THEME, THEME_STORAGE_KEY } from "../lib/themes";
 
 export const metadata = {
@@ -13,7 +14,7 @@ export default function RootLayout({ children }) {
     } catch (e) {}
   `;
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
