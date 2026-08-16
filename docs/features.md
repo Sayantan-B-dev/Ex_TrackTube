@@ -1,0 +1,52 @@
+# Features
+
+## 1. Add any YouTube playlist
+
+- Click **+ Add playlist** in the nav bar.
+- Paste a link — accepts `youtube.com/playlist?list=...`, `youtube.com/watch?v=...&list=...`, and `youtu.be` links.
+- Hit **Process**. The server runs `yt-dlp --flat-playlist --dump-json` and streams results back line-by-line over an NDJSON response.
+- A **live progress bar** shows `fetched X of Y videos` while streaming.
+- On completion the playlist metadata + videos are saved to `localStorage` and you're navigated straight to the playlist page.
+- Invalid links, empty/private playlists, network errors and rate limits all get friendly pixel-art error panels.
+
+## 2. Playlist page
+
+Two-pane layout:
+
+**Left sidebar**
+- Playlist title, channel, link to YouTube
+- **Analytics donut** — marked vs unmarked time, animated, with center percentage
+- **Stats grid** — Total, Marked, Time left, Progress %
+- **Longest videos** — top 5 with mini bars
+- **Filters** — search box + tabs: All / Marked / Not marked (with live counts)
+- **Actions** — Mark all, Clear all, Reset progress (all behind confirmation popups)
+- Auto-save status with last-change time
+
+**Right pane**
+- Scrollable video cards: thumbnail, index, title, duration badge, marked state
+- Sticky summary bar: `X shown · marked time · time left`
+
+## 3. Progress tracking
+
+- Click any video card to mark/unmark it.
+- All totals recalculate instantly: marked time, time left, progress %.
+- Progress is saved to `localStorage` on every change (write-through, synchronous).
+
+## 4. Dashboard
+
+- Grid of all added playlists: title, channel, video count, total time, progress bar + %, **Open →**
+- Delete playlist (with confirmation)
+- Empty state with a big call-to-action when nothing is added yet
+
+## 5. Themes
+
+- 10 dark pixel themes selectable from the nav bar (persisted per browser).
+- Applied via `data-theme` attribute; pre-paint script prevents theme flash.
+- Scanline overlay, pixel font pair (Press Start 2P headings, VT323 body), hard shadows, stepped corners.
+
+## 6. Rate limiting
+
+- When `RATE_LIMITING=true` in `.env.local`: max **1 playlist fetch per hour per IP**.
+- Timestamps persisted to a temp-file JSON, so restarts don't reset the window.
+- Only **successful** fetches consume a slot — invalid URLs and failed fetches don't count.
+- When `RATE_LIMITING=false` (or unset): unlimited.
