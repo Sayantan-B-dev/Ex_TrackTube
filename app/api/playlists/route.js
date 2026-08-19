@@ -1,7 +1,23 @@
 import { checkRateLimit, recordFetch } from "../../../lib/rateLimit";
 import { fetchPlaylist, validatePlaylistUrl } from "../../../lib/playlist";
+import { getUserFromRequest, jsonError } from "../../../lib/auth";
+import { listUserPlaylists } from "../../../lib/playlistDb";
 
 export const runtime = "nodejs";
+
+export async function GET(req) {
+  const authUser = getUserFromRequest(req);
+  if (!authUser) {
+    return jsonError(401, "unauthorized", "Missing or invalid token.");
+  }
+
+  try {
+    const playlists = await listUserPlaylists(authUser.id);
+    return Response.json({ playlists });
+  } catch {
+    return jsonError(500, "db_error", "Could not load your playlists. Please try again.");
+  }
+}
 
 export async function POST(req) {
   let body = null;
