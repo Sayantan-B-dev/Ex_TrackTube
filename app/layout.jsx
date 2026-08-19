@@ -1,5 +1,6 @@
 import "./globals.css";
 import { DEFAULT_THEME, THEME_STORAGE_KEY } from "../lib/themes";
+import Providers from "./providers";
 
 export const metadata = {
   title: "TrackTube",
@@ -21,7 +22,9 @@ export default function RootLayout({ children }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
