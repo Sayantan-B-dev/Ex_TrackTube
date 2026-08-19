@@ -7,7 +7,7 @@ export default function VideoList({ videos, markedIds, markedSeconds, onToggle }
       {videos.map((v) => {
         const isMarked = marked.has(v.id);
         return (
-          <li key={v.id}>
+          <li key={v.uuid || `${v.id}-${v.index}`}>
             <button
               onClick={() => onToggle(v.id)}
               className={`video-card${isMarked ? " video-card-marked" : ""}`}

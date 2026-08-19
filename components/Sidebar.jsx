@@ -97,7 +97,7 @@ export default function Sidebar({
       <section className="side-section">
         <h2 className="side-section-title">Longest videos</h2>
         {sorted.slice(0, 5).map((v) => (
-          <MiniBar key={v.id} label={v.title} seconds={v.duration} maxSeconds={sorted[0]?.duration} />
+          <MiniBar key={v.uuid || `${v.id}-${v.index}`} label={v.title} seconds={v.duration} maxSeconds={sorted[0]?.duration} />
         ))}
       </section>
 
