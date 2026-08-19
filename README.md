@@ -6,7 +6,7 @@
 
 Track your progress across any YouTube playlist — with a retro pixel-art UI.
 
-Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-dlp**, and lets you mark videos as watched while live-counting your marked time, remaining time and progress. Log in with a username to keep everything in the **cloud (Supabase)** — or use it account-free with your browser's **localStorage**.
+Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-dlp**, and lets you mark videos as watched while live-counting your marked time, remaining time and progress. Create an account and everything is stored privately in the **cloud (Supabase)** — signed out, nobody sees your playlists.
 
 ## Screenshots
 
@@ -18,7 +18,7 @@ Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-d
 
 - ➕ **Add any YouTube playlist** — paste a link, watch a live progress bar while metadata streams in
 - 🔐 **Accounts** — register with a username; passwords are hashed with **bcrypt**, sessions are basic **JWT** tokens
-- 🗄️ **Cloud storage (Supabase)** — logged-in users get their playlists, videos and progress in Postgres with row-level security; logged-out users fall back to localStorage
+- 🗄️ **Private cloud (Supabase)** — playlists, videos and progress are account-scoped in Postgres with row-level security; playlists are locked behind login
 - 📊 **Analytics sidebar** — animated donut chart (marked vs remaining), total/marked/time-left stats, longest-videos breakdown
 - ⏱️ **Live time totals** — select videos and the marked time & time left update instantly (`H:MM:SS` + humanized)
 - 🔍 **Filters** — search by title, tabs for All / Marked / Not marked
@@ -44,7 +44,7 @@ cp .env.example .env.local   # set RATE_LIMITING=true/false
 npm run dev                  # http://localhost:3000
 ```
 
-Anonymous mode works immediately (localStorage). For accounts + cloud storage:
+Accounts + cloud storage are required for playlists:
 
 1. Create a project at [supabase.com](https://supabase.com)
 2. Open **SQL Editor → New query**, paste the entire contents of `supabase_query.db`, click **Run**

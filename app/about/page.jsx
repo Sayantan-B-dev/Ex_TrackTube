@@ -28,8 +28,8 @@ export default function AboutPage() {
     ["➕", "Any playlist", "Paste any YouTube playlist link — metadata is fetched server-side via yt-dlp with a live progress bar."],
     ["📊", "Analytics", "Animated donut, marked/unmarked split, total vs time-left stats and longest-videos breakdown."],
     ["⏱️", "Live totals", "Mark videos and watch marked time, time left and progress % update instantly."],
-    ["🔐", "Accounts", "Register with a username, log in with bcrypt-hashed passwords and JWT sessions. Playlists live in Supabase with per-user access."],
-    ["💾", "Cloud + local", "Logged in? Everything is saved to Supabase. Logged out? Falls back to your browser's localStorage."],
+    ["🔐", "Accounts", "Register with a username, log in with bcrypt-hashed passwords and JWT sessions."],
+    ["🗄️", "Private cloud", "Playlists, videos and progress live in Supabase, scoped to your account — signed out, you see nothing."],
     ["🎨", "10 themes", "CRT Green, Ocean, Blood, Candy and more — pick your pixel palette from the nav bar."],
     ["🕹️", "Pixel art", "Press Start 2P & VT323 fonts, scanlines, hard shadows and stepped corners everywhere."],
     ["🔍", "Filters", "Search titles, view All / Marked / Not marked with live counts."],
@@ -52,9 +52,9 @@ export default function AboutPage() {
           <p className="about-text">
             TrackTube lets you pick any YouTube playlist you're watching through, mark
             videos as you finish them, and always know exactly how much time you've
-            invested and how much is left. Log in to keep your playlists and progress
-            in the cloud (Supabase) — or use it locally in your browser without an
-            account.
+            invested and how much is left. Every playlist, video and mark lives in
+            your private account cloud (Supabase) — nothing is ever shown to anyone
+            else.
           </p>
         </section>
 
@@ -99,7 +99,7 @@ export default function AboutPage() {
             {playlists.length > 0
               ? `You already track ${playlists.length} playlist${playlists.length === 1 ? "" : "s"}.`
               : "You're not tracking anything yet."}{" "}
-            <Link href="/" className="about-inline-link">Open the dashboard</Link> or add a
+            <Link href="/playlists" className="about-inline-link">Open your playlists</Link> or add a
             playlist right now.
           </p>
           <button className="btn btn-primary" onClick={() => setModalOpen(true)}>

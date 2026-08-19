@@ -22,31 +22,29 @@ export default function NavBar({ onAddPlaylist }) {
         <ThemePicker />
         {loading ? null : user ? (
           <>
+            <Link href="/playlists" className="btn">
+              Your playlists
+            </Link>
+            {onAddPlaylist && (
+              <button className="btn btn-primary" onClick={onAddPlaylist}>
+                + Add playlist
+              </button>
+            )}
             <span className="nav-user" title={user.username}>
               ▸ {user.username}
             </span>
             <button className="btn" onClick={logout}>
               Log out
             </button>
-            {onAddPlaylist && (
-              <button className="btn btn-primary" onClick={onAddPlaylist}>
-                + Add playlist
-              </button>
-            )}
           </>
         ) : (
           <>
-            <Link href="/login" className="btn">
-              Log in
+            <Link href="/login" className="btn btn-primary">
+              Login first
             </Link>
-            <Link href="/register" className="btn btn-primary">
+            <Link href="/register" className="btn">
               Register
             </Link>
-            {onAddPlaylist && (
-              <button className="btn" onClick={onAddPlaylist}>
-                + Add playlist
-              </button>
-            )}
           </>
         )}
       </div>

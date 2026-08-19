@@ -9,11 +9,14 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import Sidebar from "../../../components/Sidebar";
 import VideoList from "../../../components/VideoList";
 import { useCore } from "../../../lib/useCore";
+import { useAuth } from "../../../lib/useAuth";
+import LoginRequired from "../../../components/LoginRequired";
 import { formatDuration } from "../../../lib/format";
 
 export default function PlaylistPage() {
   const params = useParams();
   const id = params.id;
+  const { user, loading: authLoading } = useAuth();
   const { core, dispatch, ready } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -54,12 +57,26 @@ export default function PlaylistPage() {
     });
   }, [videos, search, filterTab, markedSet]);
 
-  if (!mounted || !ready) {
+  if (!mounted || authLoading || !ready) {
     return (
       <div className="page">
         <NavBar onAddPlaylist={() => setModalOpen(true)} />
         <main className="main">
           <p className="empty-text">Loading playlist…</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="page">
+        <NavBar />
+        <main className="container">
+          <LoginRequired
+            title="Log in first"
+            message="Playlists are private. Log in or create an account to open this playlist."
+          />
         </main>
       </div>
     );
