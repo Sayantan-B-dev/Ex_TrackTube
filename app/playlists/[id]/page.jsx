@@ -14,7 +14,7 @@ import { formatDuration } from "../../../lib/format";
 export default function PlaylistPage() {
   const params = useParams();
   const id = params.id;
-  const { core, dispatch } = useCore();
+  const { core, dispatch, ready } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filterTab, setFilterTab] = useState("all");
@@ -24,6 +24,9 @@ export default function PlaylistPage() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleAdd = (playlist, videos) =>
+    dispatch({ type: "add", playlist, videos });
 
   const playlist = core.playlists?.[id];
   const data = core.data?.[id];
@@ -51,7 +54,7 @@ export default function PlaylistPage() {
     });
   }, [videos, search, filterTab, markedSet]);
 
-  if (!mounted) {
+  if (!mounted || !ready) {
     return (
       <div className="page">
         <NavBar onAddPlaylist={() => setModalOpen(true)} />
@@ -117,7 +120,7 @@ export default function PlaylistPage() {
       <AddPlaylistModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onAdd={() => {}}
+        onAdd={handleAdd}
       />
       <ConfirmModal
         open={!!confirm}

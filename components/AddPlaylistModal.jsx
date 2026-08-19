@@ -98,10 +98,16 @@ export default function AddPlaylistModal({ open, onClose, onAdd }) {
           if (msg.type === "progress") {
             setProgress({ fetched: msg.fetched, total: msg.total });
           } else if (msg.type === "done") {
-            onAdd(msg.data.playlist, msg.data.videos);
-            setPhase("done");
-            onClose();
-            router.push(`/playlists/${msg.data.playlist.id}`);
+            try {
+              const created = await onAdd(msg.data.playlist, msg.data.videos);
+              const targetId = created?.id || msg.data.playlist.id;
+              setPhase("done");
+              onClose();
+              router.push(`/playlists/${targetId}`);
+            } catch (err) {
+              setPhase("error");
+              setError(err.message || "The playlist was fetched but could not be saved.");
+            }
             return;
           } else if (msg.type === "error") {
             setPhase("error");
@@ -163,8 +169,8 @@ export default function AddPlaylistModal({ open, onClose, onAdd }) {
                 autoFocus
               />
               <p className="field-hint">
-                The playlist is fetched on the server via yt-dlp, then stored in
-                your browser&apos;s localStorage.
+                The playlist is fetched on the server via yt-dlp, then saved to
+                your account (Supabase).
               </p>
             </div>
           )}

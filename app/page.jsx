@@ -10,7 +10,7 @@ import { useCore } from "../lib/useCore";
 import { formatDuration, humanize } from "../lib/format";
 
 export default function Home() {
-  const { core, dispatch, playlists } = useCore();
+  const { core, dispatch, playlists, ready } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [mounted, setMounted] = useState(false);
@@ -19,13 +19,12 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const handleAdd = (playlist, videos) => {
+  const handleAdd = (playlist, videos) =>
     dispatch({ type: "add", playlist, videos });
-  };
 
   const deleting = deleteId ? playlists.find((p) => p.id === deleteId) : null;
 
-  if (!mounted) {
+  if (!mounted || !ready) {
     return (
       <div className="page">
         <NavBar onAddPlaylist={() => setModalOpen(true)} />

@@ -8,7 +8,7 @@ import AddPlaylistModal from "../../components/AddPlaylistModal";
 import { useCore } from "../../lib/useCore";
 
 export default function AboutPage() {
-  const { playlists } = useCore();
+  const { playlists, ready } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -16,7 +16,7 @@ export default function AboutPage() {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted || !ready) {
     return (
       <div className="page">
         <NavBar onAddPlaylist={() => setModalOpen(true)} />
@@ -28,7 +28,8 @@ export default function AboutPage() {
     ["➕", "Any playlist", "Paste any YouTube playlist link — metadata is fetched server-side via yt-dlp with a live progress bar."],
     ["📊", "Analytics", "Animated donut, marked/unmarked split, total vs time-left stats and longest-videos breakdown."],
     ["⏱️", "Live totals", "Mark videos and watch marked time, time left and progress % update instantly."],
-    ["💾", "Local-first", "Everything lives in your browser's localStorage. No accounts, no database, no tracking."],
+    ["🔐", "Accounts", "Register with a username, log in with bcrypt-hashed passwords and JWT sessions. Playlists live in Supabase with per-user access."],
+    ["💾", "Cloud + local", "Logged in? Everything is saved to Supabase. Logged out? Falls back to your browser's localStorage."],
     ["🎨", "10 themes", "CRT Green, Ocean, Blood, Candy and more — pick your pixel palette from the nav bar."],
     ["🕹️", "Pixel art", "Press Start 2P & VT323 fonts, scanlines, hard shadows and stepped corners everywhere."],
     ["🔍", "Filters", "Search titles, view All / Marked / Not marked with live counts."],
@@ -51,8 +52,9 @@ export default function AboutPage() {
           <p className="about-text">
             TrackTube lets you pick any YouTube playlist you're watching through, mark
             videos as you finish them, and always know exactly how much time you've
-            invested and how much is left. No sign-ups, no cloud — your playlists and
-            progress stay in your browser.
+            invested and how much is left. Log in to keep your playlists and progress
+            in the cloud (Supabase) — or use it locally in your browser without an
+            account.
           </p>
         </section>
 
@@ -72,7 +74,7 @@ export default function AboutPage() {
         <section className="about-section">
           <h2 className="side-section-title">Tech stack</h2>
           <div className="about-badges">
-            {["Next.js 15", "React 19", "yt-dlp", "localStorage", "Press Start 2P", "VT323"].map((b) => (
+            {["Next.js 15", "React 19", "yt-dlp", "Supabase", "bcrypt + JWT", "Press Start 2P", "VT323"].map((b) => (
               <span className="about-badge" key={b}>
                 {b}
               </span>
