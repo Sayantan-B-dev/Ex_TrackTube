@@ -5,17 +5,26 @@
 ```
 nextjsread/
 ├── app/
-│   ├── layout.jsx                  Root layout: CSS import, theme init script, suppressHydrationWarning
+│   ├── layout.jsx                  Root layout: CSS import, theme init script, Providers wrapper
+│   ├── providers.jsx               "use client" AuthProvider wrapper (lib/useAuth)
 │   ├── page.jsx                    Dashboard (client): playlist cards, add/delete modals
 │   ├── globals.css                 All styles + 10 theme variable sets + media queries
+│   ├── login/page.jsx              Login page (client): form → useAuth.login → redirect
+│   ├── register/page.jsx           Register page (client): validation → useAuth.register
 │   ├── api/
+│   │   ├── auth/
+│   │   │   ├── register/route.js   POST: validate, bcrypt-hash, insert user, JWT
+│   │   │   ├── login/route.js      POST: verify password, JWT
+│   │   │   └── me/route.js         GET: verify Bearer token → user
 │   │   └── playlists/
-│   │       └── route.js            POST handler (streaming NDJSON)
+│   │       ├── route.js            GET: auth + list; POST: streaming NDJSON fetch (yt-dlp)
+│   │       ├── save/route.js       POST: auth + persist playlist/videos (create_playlist RPC)
+│   │       └── [id]/route.js       GET/PATCH/DELETE: detail, set progress, rename, delete
 │   └── playlists/
 │       └── [id]/
 │           └── page.jsx            Playlist tracker page (client)
 ├── components/
-│   ├── NavBar.jsx
+│   ├── NavBar.jsx                  Brand, theme picker, auth state, add-playlist button
 │   ├── ThemePicker.jsx
 │   ├── AddPlaylistModal.jsx
 │   ├── ConfirmModal.jsx
@@ -27,13 +36,18 @@ nextjsread/
 ├── lib/
 │   ├── playlist.js                 Server: yt-dlp orchestration
 │   ├── rateLimit.js                Server: file-persisted per-IP window
-│   ├── storage.js                  Client: pure core-JSON operations
-│   ├── useCore.js                  Client: reducer hook + write-through persistence
+│   ├── supabase.js                 Server: lazy service-role client (throws if env missing)
+│   ├── auth.js                     Server: bcrypt hash/verify + JWT sign/verify + request user
+│   ├── playlistDb.js               Server: Supabase queries + RPC calls for playlist CRUD
+│   ├── storage.js                  Client: pure core-JSON operations (anonymous mode)
+│   ├── useCore.js                  Client: reducer hook; Supabase-backed when logged in
+│   ├── useAuth.js                  Client: AuthProvider + useAuth (token, login/register/logout)
 │   ├── format.js                   Time formatting helpers
 │   └── themes.js                   10 theme definitions + persistence
+├── supabase_query.db               SQL schema + RPCs for the Supabase SQL Editor
 ├── public/
 │   └── fonts/                      press-start-2p.woff2, vt323.woff2
-└── .env.example                    RATE_LIMITING=true|false
+└── .env.example                    Supabase URL/keys, JWT secret, RATE_LIMITING
 ```
 
 ## Key functions
@@ -63,6 +77,48 @@ nextjsread/
    - `{"type":"done","data":{playlist,videos}}` (after `recordFetch(ip)`)
    - `{"type":"error","message":string}` on any failure (HTTP stays 200 — the status is inside the stream).
 
+### `lib/supabase.js` (server)
+
+`createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)` exported as a lazy `Proxy` — options
+(`auth.persistSession: false`) fixed; if either env var is missing the proxy throws a readable
+error on first use (so `next build` works before `.env.local` is filled).
+
+### `lib/auth.js` (server)
+
+| Function | Behavior |
+| --- | --- |
+| `hashPassword(pw)` / `verifyPassword(pw, hash)` | bcryptjs, 10 rounds |
+| `signToken(user)` | `jwt.sign({username}, JWT_SECRET, {subject: user.id, expiresIn: JWT_EXPIRES_IN})` |
+| `verifyToken(token)` | Throws on invalid/expired |
+| `getUserFromRequest(req)` | Extracts `Bearer` header, verifies → `{id, username}` or `null` |
+| `jsonError(status, code, message)` | Uniform `Response.json({error, message})` |
+
+### `lib/playlistDb.js` (server)
+
+| Function | Behavior |
+| --- | --- |
+| `listUserPlaylists(userId)` | Playlists + videos + marked rows in one query; uses the explicit FK embed `playlist_videos!playlist_videos_playlist_id_fkey(...)` because `progress` creates a second relationship path |
+| `getUserPlaylist(userId, id)` | Single playlist + videos + `markedIds` (uuids) |
+| `createPlaylist(userId, {url,title,channel,videos})` | RPC `create_playlist` (atomic insert of playlist + videos) |
+| `updatePlaylistProgress(userId, id, youtubeIds)` | RPC `set_progress(text[])`; on `PGRST202` (stale PostgREST schema cache) falls back to delete + insert |
+| `renameUserPlaylist(userId, id, title)` | Update title, returns `false` when not found |
+| `deleteUserPlaylist(userId, id)` | Delete row (FKs cascade videos + progress) |
+
+### `app/api/playlists/save/route.js`
+
+Auth required. Body `{url, title, channel, videos:[{youtubeId,title,duration}]}` → validation →
+`createPlaylist` RPC → refetch the video rows ordered by `position` → `201 {playlist, videos}`.
+
+### `app/api/playlists/[id]/route.js`
+
+All handlers `const {id} = await params` (Next 15 async params). GET → detail or 404.
+PATCH → `{videoIds: string[]}` (YouTube ids, replaces set) or `{title}` rename. DELETE → cascade delete.
+
+### `lib/useAuth.js` (client)
+
+`AuthProvider` restores the session on mount: reads `tracktube:token`, calls `/api/auth/me`,
+removes the token on `401`. Exposes `{user, loading, login, register, logout}`.
+
 ### `lib/storage.js` (client, pure)
 
 - `emptyCore() / loadCore() / saveCore(core)`
@@ -73,32 +129,40 @@ nextjsread/
 
 ### `lib/useCore.js` (client hook)
 
-```js
-const [core, dispatchRaw] = useReducer(reducer, null, () => loadCore());
-const dispatch = (action) => {
-  const next = reducer(coreRef.current, action); // compute
-  coreRef.current = next;                        // keep ref in sync
-  saveCore(next);                                // WRITE-THROUGH (synchronous)
-  dispatchRaw(action);                           // re-render
-};
-```
+Two modes, selected by auth state:
 
-Why write-through: a `useEffect`-based save races with `router.push()` — navigation can
-unmount the page before the effect flushes, losing the newly added playlist. Write-through
-guarantees persistence inside the action call itself.
+**Anonymous (localStorage):** unchanged write-through dispatch — synchronous `saveCore` inside
+the action to beat navigation races.
 
-Also listens to the `storage` event for cross-tab sync (`dispatch({type:"reload"})`).
+**Logged in (Supabase):** on mount (and on login/logout) the effect fetches
+`GET /api/playlists` and rebuilds the core in-memory shape, with `ready` flipping true when the
+first load settles (pages show "Loading…" until then). Dispatch becomes an async per-action API
+call:
+
+| Action (logged in) | API call |
+| --- | --- |
+| `{type:"add", playlist, videos}` | `POST /api/playlists/save` → uses returned uuid for the core entry; resolves to the new playlist so the modal can navigate |
+| `{type:"delete", id}` | `DELETE /api/playlists/[id]` |
+| `{type:"toggle"\|"markAll"\|"clear", id, …}` | reducer update first (optimistic UI), then `PATCH /api/playlists/[id]` with the full marked set (`savedAt` refreshed) |
+| `{type:"reload", core}` | local replace |
+
+DB video rows are mapped to the UI shape in `videoFromDb`: `id` = YouTube id, `uuid` = DB uuid
+(React keys), `thumbnail` = `i.ytimg.com/vi/<id>/hqdefault.jpg`, `index`, `durationString`.
+Failure handling: `401` → auto logout (triggers reload); `add`-time errors rethrow to the modal;
+mutation errors keep local state until next reload.
+
+Cross-tab sync (`storage` event) still applies to anonymous mode.
 
 ## State reducer actions
 
-| Action | Effect |
-| --- | --- |
-| `{type:"add", playlist, videos}` | Persist new playlist + data |
-| `{type:"delete", id}` | Remove playlist, data, progress |
-| `{type:"toggle", id, videoId}` | Toggle a video's marked state |
-| `{type:"markAll", id, videoIds}` | Mark all videos |
-| `{type:"clear", id}` | Clear marks |
-| `{type:"reload", core}` | Replace with freshly loaded core (cross-tab) |
+| Action | Effect (anonymous) | Effect (logged in) |
+| --- | --- | --- |
+| `{type:"add", playlist, videos}` | Persist new playlist + data | POST save → rebuild entry from response |
+| `{type:"delete", id}` | Remove playlist, data, progress | DELETE API → remove from core |
+| `{type:"toggle", id, videoId}` | Toggle a video's marked state | Optimistic toggle + PATCH full set |
+| `{type:"markAll", id, videoIds}` | Mark all videos | Optimistic + PATCH full set |
+| `{type:"clear", id}` | Clear marks | Optimistic + PATCH `[]` |
+| `{type:"reload", core}` | Replace with freshly loaded core (cross-tab / first load) | — |
 
 ## Rendering details
 
@@ -112,7 +176,10 @@ Also listens to the `storage` event for cross-tab sync (`dispatch({type:"reload"
 
 ```
 /playlists/[id] mounts
-  → useCore() lazy-loads tracktube:core from localStorage
+  → useCore() waits for auth, then loads (Supabase: GET /api/playlists, or localStorage)
   → if core.playlists[id] && core.data[id] missing → "Playlist not found" + back link
   → else render Sidebar + VideoList with live stats
 ```
+
+Keying note: playlist ids are **DB uuids** when logged in (the id you see in the URL), YouTube
+playlist ids in anonymous mode. Video keys use `uuid` (DB) or `id-index` (anonymous/duplicates).

@@ -1,12 +1,19 @@
 # Features
 
-## 1. Add any YouTube playlist
+## 1. Accounts (username + bcrypt + JWT)
+
+- **Register** (`/register`) or **log in** (`/login`) with a username and password.
+- Passwords are never stored in plain text — bcrypt-hashed (10 rounds) in the `users` table.
+- Sessions are basic JWTs signed with `JWT_SECRET`, held in `localStorage`, sent as `Authorization: Bearer` on every API call.
+- Logged in, the navbar shows your username + **Log out**; logged out it shows **Log in / Register**. Playlists are tied to your account and sync across devices/browsers.
+
+## 2. Add any YouTube playlist
 
 - Click **+ Add playlist** in the nav bar.
 - Paste a link — accepts `youtube.com/playlist?list=...`, `youtube.com/watch?v=...&list=...`, and `youtu.be` links.
 - Hit **Process**. The server runs `yt-dlp --flat-playlist --dump-json` and streams results back line-by-line over an NDJSON response.
 - A **live progress bar** shows `fetched X of Y videos` while streaming.
-- On completion the playlist metadata + videos are saved to `localStorage` and you're navigated straight to the playlist page.
+- On completion the playlist metadata + videos are **saved to your account (Supabase)** — or to `localStorage` when logged out — and you're navigated straight to the playlist page.
 - Invalid links, empty/private playlists, network errors and rate limits all get friendly pixel-art error panels.
 
 ## 2. Playlist page
@@ -30,7 +37,7 @@ Two-pane layout:
 
 - Click any video card to mark/unmark it.
 - All totals recalculate instantly: marked time, time left, progress %.
-- Progress is saved to `localStorage` on every change (write-through, synchronous).
+- Progress is saved on every change — to Supabase when logged in (`PATCH /api/playlists/[id]`), to `localStorage` otherwise.
 
 ## 4. Dashboard
 

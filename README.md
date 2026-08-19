@@ -6,7 +6,7 @@
 
 Track your progress across any YouTube playlist — with a retro pixel-art UI.
 
-Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-dlp**, and lets you mark videos as watched while live-counting your marked time, remaining time and progress — all persisted in your browser's **localStorage**. No accounts, no database.
+Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-dlp**, and lets you mark videos as watched while live-counting your marked time, remaining time and progress. Log in with a username to keep everything in the **cloud (Supabase)** — or use it account-free with your browser's **localStorage**.
 
 ## Screenshots
 
@@ -17,10 +17,11 @@ Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-d
 ## Features
 
 - ➕ **Add any YouTube playlist** — paste a link, watch a live progress bar while metadata streams in
+- 🔐 **Accounts** — register with a username; passwords are hashed with **bcrypt**, sessions are basic **JWT** tokens
+- 🗄️ **Cloud storage (Supabase)** — logged-in users get their playlists, videos and progress in Postgres with row-level security; logged-out users fall back to localStorage
 - 📊 **Analytics sidebar** — animated donut chart (marked vs remaining), total/marked/time-left stats, longest-videos breakdown
 - ⏱️ **Live time totals** — select videos and the marked time & time left update instantly (`H:MM:SS` + humanized)
 - 🔍 **Filters** — search by title, tabs for All / Marked / Not marked
-- 💾 **Local-first** — playlists, metadata and progress all live in `localStorage`; auto-saved on every change
 - 🛡️ **Rate limiting** — 1 playlist fetch per hour per IP (file-persisted, toggleable via env)
 - 🎨 **10 dark pixel themes** — CRT Green, Sunset, Ocean, Blood, Forest, Purple Haze, Mono, Candy, Ember, Night Blue
 - 🕹️ **Pixel-art aesthetic** — Press Start 2P + VT323 fonts, scanlines, hard pixel shadows
@@ -31,8 +32,9 @@ Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-d
 
 - **Next.js 15** (App Router) + React 19
 - **yt-dlp** — server-side playlist metadata extraction (streamed, no temp files)
-- **localStorage** — single-core-JSON persistence
-- No database, no external API keys
+- **Supabase** — Postgres database for registered users (`users`, `playlists`, `playlist_videos`, `progress`)
+- **bcryptjs + jsonwebtoken** — password hashing and JWT sessions
+- **localStorage** — anonymous/local-first fallback
 
 ## Quick Start
 
@@ -41,6 +43,12 @@ npm install
 cp .env.example .env.local   # set RATE_LIMITING=true/false
 npm run dev                  # http://localhost:3000
 ```
+
+Anonymous mode works immediately (localStorage). For accounts + cloud storage:
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Open **SQL Editor → New query**, paste the entire contents of `supabase_query.db`, click **Run**
+3. Fill `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` and `JWT_SECRET` in `.env.local`
 
 Requires [yt-dlp](https://github.com/yt-dlp/yt-dlp) on the host machine (`yt-dlp --version`).
 
