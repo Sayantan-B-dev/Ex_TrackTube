@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
 const RATE_LIMIT_MS = 60 * 60 * 1000;
 
 export default function AddPlaylistModal({ open, onClose, onAdd }) {
-  const router = useRouter();
   const [url, setUrl] = useState("");
   const [phase, setPhase] = useState("idle"); // idle | fetching | done | error
   const [progress, setProgress] = useState({ fetched: 0, total: 0 });
@@ -99,11 +97,9 @@ export default function AddPlaylistModal({ open, onClose, onAdd }) {
             setProgress({ fetched: msg.fetched, total: msg.total });
           } else if (msg.type === "done") {
             try {
-              const created = await onAdd(msg.data.playlist, msg.data.videos);
-              const targetId = created?.id || msg.data.playlist.id;
+              await onAdd(msg.data.playlist, msg.data.videos);
               setPhase("done");
               onClose();
-              router.push(`/playlists/${targetId}`);
             } catch (err) {
               setPhase("error");
               setError(err.message || "The playlist was fetched but could not be saved.");

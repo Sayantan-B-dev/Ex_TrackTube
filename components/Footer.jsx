@@ -5,7 +5,7 @@ export default function Footer() {
         <span className="footer-brand">TrackTube ▓</span>
         <span className="footer-links">
           <a href="/about">About</a>
-          <a href="https://github.com/Sayantan-B-dev" target="_blank" rel="noreferrer">
+          <a href="https://github.com/Sayantan-B-dev/Ex_TrackTube" target="_blank" rel="noreferrer">
             GitHub ↗
           </a>
         </span>

@@ -240,6 +240,35 @@ a {
   margin-bottom: 24px;
 }
 
+.page-head h1,
+.playlist-card-title,
+.main-bar-title,
+.video-title,
+.sidebar-title,
+.about-card h3,
+.how-step h3,
+.empty-state h2,
+.modal-header h2 {
+  overflow-wrap: anywhere;
+}
+
+.page-head p,
+.empty-state p,
+.confirm-message,
+.error-message,
+.field-hint,
+.sidebar-subtitle,
+.main-bar-info,
+.video-index,
+.about-text,
+.landing-text,
+.auth-switch,
+.footer-copy,
+.how-step p,
+.about-card p {
+  overflow-wrap: anywhere;
+}
+
 .page-head h1 {
   font-size: 18px;
   margin-bottom: 10px;
@@ -357,6 +386,10 @@ a {
   color: var(--accent);
   font-size: 18px;
   line-height: 1;
+}
+
+.navbar-hamburger {
+  display: none;
 }
 
 .navbar-actions {
@@ -624,6 +657,8 @@ a {
 .playlist-card-progress-meta {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 10px;
   font-size: 16px;
   color: var(--muted);
 }
@@ -1599,7 +1634,43 @@ a {
   }
 
   .navbar-actions {
-    gap: 8px;
+    display: none;
+  }
+
+  .navbar-hamburger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 3px solid var(--border);
+    background: var(--panel);
+    color: var(--accent);
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--shadow);
+  }
+
+  .navbar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 12px;
+    border: 3px solid var(--border);
+    border-top: none;
+    background: var(--panel);
+    box-shadow: 0 4px 0 var(--shadow);
+    margin-top: 10px;
+  }
+
+  .navbar-menu .nav-user {
+    text-align: center;
+  }
+
+  .navbar-menu-theme {
+    display: flex;
+    justify-content: center;
   }
 
   .playlist-grid {
@@ -1617,6 +1688,64 @@ a {
 
   .modal {
     max-width: 100%;
+  }
+
+  .modal-footer {
+    flex-wrap: wrap;
+  }
+
+  .auth-card {
+    padding: 16px;
+  }
+
+  .main {
+    padding: 12px;
+  }
+
+  .video-title {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .main-bar {
+    padding: 10px 0;
+  }
+
+  .hero-title {
+    font-size: 25px;
+    letter-spacing: 2px;
+  }
+
+  .hero-logo {
+    font-size: 52px;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+  }
+
+  .hero {
+    padding: 44px 10px 0;
+  }
+
+  .hero-glyphs {
+    font-size: 17px;
+  }
+
+  .footer {
+    padding: 16px 12px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .footer-links {
+    gap: 14px;
   }
 }
 

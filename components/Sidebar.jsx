@@ -32,7 +32,7 @@ export default function Sidebar({
 
   return (
     <aside className="sidebar">
-      <Link href="/" className="back-link">
+      <Link href="/playlists" className="back-link">
         ← All playlists
       </Link>
       <h1 className="sidebar-title">{playlist.title}</h1>
@@ -150,7 +150,7 @@ export default function Sidebar({
       <div className="save-note">
         {savedAt
           ? `Progress auto-saved · last change ${new Date(savedAt).toLocaleTimeString()}`
-          : "Progress is saved automatically to localStorage"}
+          : "Progress saves to your account automatically"}
       </div>
     </aside>
   );

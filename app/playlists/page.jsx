@@ -29,7 +29,7 @@ export default function PlaylistsPage() {
 
   if (!mounted || authLoading || !ready) {
     return (
-      <div className="page">
+      <div className="page page-scroll">
         <NavBar onAddPlaylist={() => setModalOpen(true)} />
         <main className="container">
           <div className="page-head">
@@ -43,7 +43,7 @@ export default function PlaylistsPage() {
 
   if (!user) {
     return (
-      <div className="page">
+      <div className="page page-scroll">
         <NavBar />
         <main className="container">
           <LoginRequired
@@ -57,7 +57,7 @@ export default function PlaylistsPage() {
   }
 
   return (
-    <div className="page">
+    <div className="page page-scroll">
       <NavBar onAddPlaylist={() => setModalOpen(true)} />
       <AddPlaylistModal
         open={modalOpen}
