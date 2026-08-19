@@ -141,3 +141,26 @@ Every issue encountered during development, root cause, and the fix. Each entry 
 - Always commit with the identity you want on GitHub: set `git config user.name` / `user.email` (or the repo-local equivalents) once instead of overriding per-commit. Ideally use Git's `--local` config or the GitHub **private noreply address** (`<ID>+<username>@users.noreply.github.com`).
 - Before this incident, a clone that had written `dev@tracktube.local` into `package.json`? No — the identity came only from per-commit `-c user.name / user.email` overrides; the real fix is committing with a proper identity from the start.
 - Rewriting history changes all commit SHAs — other clones must re-sync (`git fetch` + `git reset --hard origin/main`). Reasonable only on a solo repo with no other collaborators.
+
+## 16. Add-playlist page race (superseded by design change)
+
+**Symptom:** (Historical, entry #7 above) Add playlist → redirected to `/playlists/[id]` → "Playlist not found".
+
+**Resolution:** The redirect itself was removed — after a successful save the modal now closes and the app **stays on the current page** (`components/AddPlaylistModal.jsx` no longer calls `router.push`), so there is no navigation race at all. (The old localStorage write-through fix became moot when localStorage was dropped entirely.)
+
+## 17. Privacy rework: localStorage fallback removed
+
+**Symptom:** After logging out, previously added playlists were still visible (browser localStorage) — nothing was actually private, and the marketing copy on the home page claimed "Everything stays in your browser."
+
+**Fix:** The app is now **account-only**:
+- `lib/storage.js` holds only pure functions (`emptyCore`, add/delete/toggle/clear helpers) — `loadCore`/`saveCore`/`CORE_KEY` deleted.
+- `lib/useCore.js` loads `emptyCore` when signed out and `dispatch` is a no-op — no client persistence of any playlist data; signed-in actions map to the API.
+- Private routes (`/playlists`, `/playlists/[id]`) render a `LoginRequired` gate ("Log in first") when signed out.
+- Browsers with old `tracktube:core` data simply ignore it (key no longer read).
+- Cascade deletes confirmed in `supabase_query.db` (`playlist_videos` and `progress` FKs are `ON DELETE CASCADE`), so deleting a playlist removes its videos and progress from the DB automatically.
+
+## 18. Mobile nav overflow
+
+**Symptom:** Navbar buttons (Login first / Your playlists / theme / log out) wrapped and overflowed on small screens.
+
+**Fix:** `components/NavBar.jsx` now renders a hamburger dropdown (≤ 640px) with all actions; responsive audit: footer stacks and centers, `.video-title` clamps to two lines, `main`/`auth-card` padding shrinks, modal footers wrap, and long titles/usernames break safely with `overflow-wrap: anywhere` — no text escapes its box.

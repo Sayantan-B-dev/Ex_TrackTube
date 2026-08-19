@@ -25,16 +25,16 @@ Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-d
 - 🛡️ **Rate limiting** — 1 playlist fetch per hour per IP (file-persisted, toggleable via env)
 - 🎨 **10 dark pixel themes** — CRT Green, Sunset, Ocean, Blood, Forest, Purple Haze, Mono, Candy, Ember, Night Blue
 - 🕹️ **Pixel-art aesthetic** — Press Start 2P + VT323 fonts, scanlines, hard pixel shadows
-- 📱 **Responsive** — sidebar stacks on top for mobile, cards adapt down to small screens
+- 📱 **Mobile-first** — hamburger nav, stacking layouts, wrap-safe text; no content spills out of its box down to small phones
 - ⚠️ **Confirm popups** for destructive actions (Mark all, Clear all, Reset, Delete playlist)
+- 🏠 **Landing page** — animated pixel-art info home with CTAs for everyone
 
 ## Tech Stack
 
 - **Next.js 15** (App Router) + React 19
 - **yt-dlp** — server-side playlist metadata extraction (streamed, no temp files)
 - **Supabase** — Postgres database for registered users (`users`, `playlists`, `playlist_videos`, `progress`)
-- **bcryptjs + jsonwebtoken** — password hashing and JWT sessions
-- **localStorage** — anonymous/local-first fallback
+- **bcryptjs + jsonwebtoken** — password hashing and JWT sessions (token storage only, no local playlist data)
 
 ## Quick Start
 

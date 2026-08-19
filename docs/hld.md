@@ -10,15 +10,17 @@ flowchart LR
     W -->|"register/login (bcrypt + JWT)"| A[Auth API]
     A -->|"store hash / verify"| DB[(Supabase Postgres)]
     W -->|"CRUD playlists/progress"| DB
-    U -->|"JWT in localStorage"| W
-    W -->|"anonymous fallback"| LS[(localStorage)]
+    U -->|"JWT token in localStorage"| W
     W -->|"rate-limit check"| RL[(temp file: rate-limit.json)]
 ```
 
-Two storage modes:
+Account-only storage:
 
-- **Logged in**: playlists, videos and progress live in **Supabase** (user-scoped rows, RLS locked down; server talks via the service-role key). Auth is self-made: bcrypt-hashed passwords + JWT.
-- **Logged out**: everything stays in the browser's **localStorage** (original local-first behavior).
+- **Signed in**: playlists, videos and progress live in **Supabase** (user-scoped rows, RLS
+  locked down; server talks via the service-role key). Auth is self-made: bcrypt-hashed
+  passwords + JWT (token is the only thing stored in the browser).
+- **Signed out**: nothing is stored — `useCore` runs an empty no-op core and private pages
+  (`/playlists`, `/playlists/[id]`) render a "Log in first" gate.
 
 ## Component view
 
@@ -27,11 +29,11 @@ flowchart TD
     subgraph Client
         NAV[NavBar] --> TP[ThemePicker]
         NAV --> AP[AddPlaylistModal]
-        HOME[Dashboard page /] --> UC[useCore hook]
+        LAND[Landing page /] --> AUTH[useAuth hook]
+        HOME[Playlists home /playlists] --> UC[useCore hook]
         PL[Playlist page /playlists/[id]] --> UC
         UC -->|"token + CRUD"| API
-        UC -->|"anonymous fallback"| LS[(localStorage)]
-        NAV -->|"login/register/logout"| AUTH[useAuth hook]
+        NAV -->|"login/register/logout"| AUTH
         REG[Register page] --> AUTH
         LOG[Login page] --> AUTH
         PL --> SB[Sidebar]
@@ -73,16 +75,11 @@ sequenceDiagram
     R->>R: fetchMissingDurations (only if any)
     R->>R: recordFetch(ip) — successful only
     R-->>M: {type:"done", playlist, videos}
-    alt logged in
-        M->>C: dispatch("add")
-        C->>S: POST /api/playlists/save (create_playlist RPC)
-        S-->>C: 201 playlist + video uuids
-        C-->>M: created playlist id
-    else logged out
-        M->>C: dispatch("add") → localStorage write-through
-    end
-    M->>M: router.push(/playlists/[new id])
-    C-->>PL: playlist page reads core (Supabase or localStorage)
+    M->>C: dispatch("add")
+    C->>S: POST /api/playlists/save (create_playlist RPC)
+    S-->>C: 201 playlist + video uuids
+    M->>M: modal closes — stays on current page
+    C-->>PL: playlist page reads core (GET /api/playlists)
 ```
 
 ## Progress sync (logged in)
@@ -109,7 +106,6 @@ flowchart LR
     FE[Next.js standalone] --> OS[Host with yt-dlp installed]
     OS --> FS[OS temp dir for rate-limit file]
     OS --> DB[(Supabase project — tables from supabase_query.db)]
-    OS --> BR[Browser localStorage for anonymous users]
 ```
 
 ## Security & limits

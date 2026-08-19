@@ -7,7 +7,7 @@
 | Framework | Next.js 15.5 (App Router) |
 | UI | React 19, plain CSS (no UI library) |
 | Extraction | yt-dlp via `child_process.spawn` (server-side) |
-| Storage | Supabase (Postgres) when logged in; `localStorage` fallback when logged out |
+| Storage | Supabase (Postgres), account-scoped — no client-side playlist storage |
 | Auth | Custom: bcrypt-hashed passwords + JWT (`jsonwebtoken`) |
 | Fonts | Press Start 2P + VT323 (self-hosted in `public/fonts`) |
 
@@ -46,9 +46,9 @@ Login:     username → bcrypt.compare(password, hash) → JWT
 Every API: Authorization: Bearer <jwt> → jwt.verify → user id
 ```
 
-- Token stored client-side in `localStorage` under `tracktube:token` by `lib/useAuth.js`.
+- Token stored client-side in `localStorage` under `tracktube:token` by `lib/useAuth.js` (JWT only — playlist data never touches `localStorage`).
 - `getUserFromRequest(req)` in `lib/auth.js` extracts + verifies the Bearer token; `401` otherwise.
-- `tracktube:core` (localStorage) and `tracktube:theme` remain the anonymous-mode keys.
+- `tracktube:theme` is the only other browser key.
 
 ## Request flow — adding a playlist
 
@@ -61,33 +61,35 @@ POST /api/playlists {url} ───────▶  validatePlaylistUrl()
                                      spawn yt-dlp --flat-playlist --dump-json ──▶ stdout NDJSON
 ◀── progress {fetched,total} ─────  enqueue per parsed line
 ◀── done {playlist, videos} ──────  recordFetch(ip) [only on success]
-   (logged in) POST /api/playlists/save {title, url, channel, videos[]}
+   POST /api/playlists/save {title, url, channel, videos[]}   (auth required)
        → RPC create_playlist → 201 {playlist, videos[with uuids]}
-   (logged out) dispatch("add") → localStorage write-through
-◀── modal closes → router.push(/playlists/<new id>)
+◀── modal closes — stays on the current page (list stays in /playlists)
 ```
 
 The fetch response is a **streaming NDJSON** (`application/x-ndjson`) so progress is live. Each
 parsed line yields a `progress` message; the final line is `done` or `error`.
 
-## Storage modes
+## Storage
 
-Single client key (anonymous): `tracktube:core`
+The whole app is **account-only**: signed out, `useCore` loads `emptyCore`, `ready` becomes
+true and `dispatch` is a no-op — nothing is persisted on the client. Playlists, videos and
+progress live exclusively in Supabase (see schema). Client shape after `GET /api/playlists`:
 
 ```jsonc
 {
-  "playlists": { "PLC3y8-...": { "id": "...", "title": "...", "channel": "...",
+  "playlists": { "<db-uuid>": { "id": "<db-uuid>", "title": "...", "channel": "...",
       "url": "...", "addedAt": "...", "totalVideos": 92, "totalSeconds": 25381 } },
-  "data": { "PLC3y8-...": { "playlist": "…", "videos": [{ "index": 1, "id": "b4ba60j_4o8",
-      "title": "…", "duration": 256, "durationString": "4:16", "thumbnail": "…" }] } },
-  "progress": { "PLC3y8-...": { "ids": ["b4ba60j_4o8"], "savedAt": "…" } }
+  "data": { "<db-uuid>": { "playlist": "…", "videos": [{ "index": 1, "id": "b4ba60j_4o8",
+      "uuid": "<db-uuid>", "title": "…", "duration": 256, "durationString": "4:16",
+      "thumbnail": "…" }] } },
+  "progress": { "<db-uuid>": { "ids": ["<video-uuid>"], "savedAt": "…" } }
 }
 ```
 
-Logged-in mode: `useCore` rebuilds this exact shape from `GET /api/playlists` — playlist ids are
-DB uuids, videos carry `id` = YouTube id + `uuid` = DB uuid, `markedIds` come from the `progress`
-table. Every dispatch action maps to an API call (see below). Other keys: `tracktube:theme`,
-`tracktube:token`, rate-limit file at `os.tmpdir()/tracktube-rate-limit.json`.
+Every dispatch action maps to an API call (see below). Other browser keys: `tracktube:theme`,
+`tracktube:token`; rate-limit file at `os.tmpdir()/tracktube-rate-limit.json`. Deleting a
+playlist (`DELETE /api/playlists/[id]`) relies on the DB cascades — `playlist_videos` and
+`progress` rows are removed automatically.
 
 ## Server modules
 
@@ -105,11 +107,12 @@ table. Every dispatch action maps to an API call (see below). Other keys: `track
 | Module | Responsibility |
 | --- | --- |
 | `lib/useAuth.js` | `AuthProvider` + `useAuth()`: token in `tracktube:token`, restore session via `/api/auth/me`, `login/register/logout` helpers |
-| `lib/useCore.js` | `useCore()` hook: loads from Supabase when logged in (fallback: localStorage), async dispatch maps actions to API calls, `ready` flag, `playlists` selector |
-| `lib/storage.js` | Pure functions over the core JSON (anonymous mode) |
+| `lib/useCore.js` | `useCore()` hook: loads from `GET /api/playlists` when logged in (empty no-op core when signed out), async dispatch maps actions to API calls, `ready` flag, `playlists` selector |
+| `lib/storage.js` | Pure functions over the core JSON shape (no persistence of its own) |
 | `lib/format.js` | `formatDuration`, `humanize`, `timeLeftIn` |
 | `lib/themes.js` | 10 theme definitions, load/save theme id |
-| `components/NavBar.jsx` | Brand, theme picker, auth state (Log in/Register or username + Log out), add-playlist button |
+| `components/NavBar.jsx` | Brand, theme picker, auth state (Log in/Register or username + Log out), add-playlist button; hamburger dropdown menu on ≤ 640px |
+| `components/LoginRequired.jsx` | Login gate for private pages (title + message + Log in / Register CTAs) |
 | `components/AddPlaylistModal.jsx` | URL form, streamed progress bar, awaits DB save, error/rate-limit states |
 | `components/ConfirmModal.jsx` | Reusable confirmation popup (Escape/Enter keys) |
 | `components/Sidebar.jsx` | Analytics panel (donut, stats, longest, filters, actions) |
@@ -135,7 +138,7 @@ table. Every dispatch action maps to an API call (see below). Other keys: `track
 
 ## Known limitations
 
-- Anonymous mode is capped by the `localStorage` quota (~5 MB).
+- Playlists are account-only: you must be logged in (registration is free).
 - Rate limit is per IP as seen by the server; behind a proxy, set `X-Forwarded-For` correctly.
 - yt-dlp must be installed on the host.
 - Progress updates are optimistic; a failed PATCH leaves local state until the next reload.

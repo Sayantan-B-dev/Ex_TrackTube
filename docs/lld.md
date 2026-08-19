@@ -121,28 +121,30 @@ removes the token on `401`. Exposes `{user, loading, login, register, logout}`.
 
 ### `lib/storage.js` (client, pure)
 
-- `emptyCore() / loadCore() / saveCore(core)`
+- `emptyCore()`
 - `addPlaylistToCore(core, playlist, videos)` — sets meta, data, and initializes progress
 - `deletePlaylistFromCore(core, id)`
 - `toggleVideoInProgress(progress, id, videoId)` — Set-based toggle + `savedAt`
 - `setAllInProgress(progress, videoIds)` / `clearProgress(progress)`
 
+No persistence — storage is entirely server-side now.
+
 ### `lib/useCore.js` (client hook)
 
-Two modes, selected by auth state:
+Account-only mode, selected by auth state:
 
-**Anonymous (localStorage):** unchanged write-through dispatch — synchronous `saveCore` inside
-the action to beat navigation races.
+- **Signed out:** on mount the effect loads `emptyCore`, `ready` flips true immediately, and
+  `dispatch` is a no-op returning `null` — nothing is persisted client-side; private pages
+  render `LoginRequired` instead of data.
+- **Signed in:** on mount (and on login/logout) the effect fetches
+  `GET /api/playlists` and rebuilds the core in-memory shape, with `ready` flipping true when the
+  first load settles (pages show "Loading…" until then). Dispatch becomes an async per-action API
+  call:
 
-**Logged in (Supabase):** on mount (and on login/logout) the effect fetches
-`GET /api/playlists` and rebuilds the core in-memory shape, with `ready` flipping true when the
-first load settles (pages show "Loading…" until then). Dispatch becomes an async per-action API
-call:
-
-| Action (logged in) | API call |
+| Action | API call |
 | --- | --- |
-| `{type:"add", playlist, videos}` | `POST /api/playlists/save` → uses returned uuid for the core entry; resolves to the new playlist so the modal can navigate |
-| `{type:"delete", id}` | `DELETE /api/playlists/[id]` |
+| `{type:"add", playlist, videos}` | `POST /api/playlists/save` → uses returned uuid for the core entry |
+| `{type:"delete", id}` | `DELETE /api/playlists/[id]` (DB cascades wipe videos + progress) |
 | `{type:"toggle"\|"markAll"\|"clear", id, …}` | reducer update first (optimistic UI), then `PATCH /api/playlists/[id]` with the full marked set (`savedAt` refreshed) |
 | `{type:"reload", core}` | local replace |
 
@@ -151,35 +153,38 @@ DB video rows are mapped to the UI shape in `videoFromDb`: `id` = YouTube id, `u
 Failure handling: `401` → auto logout (triggers reload); `add`-time errors rethrow to the modal;
 mutation errors keep local state until next reload.
 
-Cross-tab sync (`storage` event) still applies to anonymous mode.
-
 ## State reducer actions
 
-| Action | Effect (anonymous) | Effect (logged in) |
-| --- | --- | --- |
-| `{type:"add", playlist, videos}` | Persist new playlist + data | POST save → rebuild entry from response |
-| `{type:"delete", id}` | Remove playlist, data, progress | DELETE API → remove from core |
-| `{type:"toggle", id, videoId}` | Toggle a video's marked state | Optimistic toggle + PATCH full set |
-| `{type:"markAll", id, videoIds}` | Mark all videos | Optimistic + PATCH full set |
-| `{type:"clear", id}` | Clear marks | Optimistic + PATCH `[]` |
-| `{type:"reload", core}` | Replace with freshly loaded core (cross-tab / first load) | — |
+| Action | Effect (signed in) |
+| --- | --- |
+| `{type:"add", playlist, videos}` | POST save → rebuild entry from response |
+| `{type:"delete", id}` | DELETE API → remove from core |
+| `{type:"toggle", id, videoId}` | Optimistic toggle + PATCH full set |
+| `{type:"markAll", id, videoIds}` | Optimistic + PATCH full set |
+| `{type:"clear", id}` | Optimistic + PATCH `[]` |
+| `{type:"reload", core}` | Replace with freshly loaded core (first load) |
+
+(Signed out: every action above is a no-op — see `useCore` above.)
 
 ## Rendering details
 
 - **Playlist page** computes `stats` (marked/total seconds) and `filtered` via `useMemo`, keyed on `videos`, `markedSet`, `search`, `filterTab`.
 - **Donut**: SVG circle `strokeDasharray = C * pct%`, `stroke` applied via inline `style` (CSS `var()` in SVG presentation attributes breaks Safari).
 - **Themes**: `[data-theme]` selectors in `globals.css`; pre-paint script in `layout.jsx`; `suppressHydrationWarning` on `<html>` because the script mutates `data-theme` before React hydrates.
-- **Responsive**: `1200px` sidebar narrows → `960px` stacks layout → `640px` compact nav/grid → `480px` full-width thumbnails & single-column stats.
+- **Responsive**: `1200px` sidebar narrows → `960px` stacks layout → `640px` hamburger nav + compact grid/footer → `480px` full-width thumbnails & single-column stats. Long titles/words wrap with `overflow-wrap: anywhere` so nothing spills out of its box.
 - **Pixel styling**: Press Start 2P for headings/buttons (9–13px, tiny by design), VT323 body, `border-width: 3px`, `box-shadow: 3px 3px 0` hard shadows, `:active` translate to fake button press, scanline overlay via `body::after`, `image-rendering: pixelated`.
 
-## Local-first flow on playlist open
+## Signed-out flow on playlist open
 
 ```
-/playlists/[id] mounts
-  → useCore() waits for auth, then loads (Supabase: GET /api/playlists, or localStorage)
+/playlists or /playlists/[id] mounts
+  → useAuth(): signed out → render <LoginRequired> ("Log in first" + CTAs)
+  → reads never load; dispatch is a no-op
+/playlists/[id] (signed in)
+  → useCore() waits for auth, then loads (GET /api/playlists)
   → if core.playlists[id] && core.data[id] missing → "Playlist not found" + back link
   → else render Sidebar + VideoList with live stats
 ```
 
-Keying note: playlist ids are **DB uuids** when logged in (the id you see in the URL), YouTube
-playlist ids in anonymous mode. Video keys use `uuid` (DB) or `id-index` (anonymous/duplicates).
+Keying note: playlist ids are **DB uuids** (the id you see in the URL). Video keys use `uuid`
+(DB) with `id-index` fallback.
