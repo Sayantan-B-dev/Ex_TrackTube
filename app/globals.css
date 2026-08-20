@@ -887,6 +887,34 @@ a {
   animation: spin-steps 1s steps(4) infinite;
 }
 
+.spinner-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 3px;
+  flex-shrink: 0;
+}
+
+.sync-indicator {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 3px solid var(--border);
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+
+.sync-indicator-text {
+  font-family: "Press Start 2P", monospace;
+  font-size: 9px;
+  color: var(--accent);
+  animation: blink 0.8s steps(2) infinite;
+}
+
 @keyframes spin-steps {
   to {
     transform: rotate(360deg);

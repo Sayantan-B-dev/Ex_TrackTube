@@ -6,6 +6,7 @@ import NavBar from "../../components/NavBar";
 import AddPlaylistModal from "../../components/AddPlaylistModal";
 import ConfirmModal from "../../components/ConfirmModal";
 import LoginRequired from "../../components/LoginRequired";
+import SyncIndicator from "../../components/SyncIndicator";
 import Footer from "../../components/Footer";
 import { useCore } from "../../lib/useCore";
 import { useAuth } from "../../lib/useAuth";
@@ -13,7 +14,7 @@ import { formatDuration, humanize } from "../../lib/format";
 
 export default function PlaylistsPage() {
   const { user, loading: authLoading } = useAuth();
-  const { core, dispatch, playlists, ready } = useCore();
+  const { core, dispatch, playlists, ready, busy } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [mounted, setMounted] = useState(false);
@@ -76,6 +77,7 @@ export default function PlaylistsPage() {
           setDeleteId(null);
         }}
       />
+      <SyncIndicator busy={busy} />
 
       <main className="container">
         <div className="page-head">

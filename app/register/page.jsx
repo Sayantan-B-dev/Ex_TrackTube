@@ -111,7 +111,13 @@ export default function RegisterPage() {
             )}
 
             <button className="btn btn-primary btn-lg btn-block" type="submit" disabled={busy}>
-              {busy ? "Creating…" : "Create account"}
+              {busy ? (
+                <>
+                  <span className="spinner spinner-sm" aria-hidden /> Creating…
+                </>
+              ) : (
+                "Create account"
+              )}
             </button>
           </form>
 

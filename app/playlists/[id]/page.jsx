@@ -11,13 +11,14 @@ import VideoList from "../../../components/VideoList";
 import { useCore } from "../../../lib/useCore";
 import { useAuth } from "../../../lib/useAuth";
 import LoginRequired from "../../../components/LoginRequired";
+import SyncIndicator from "../../../components/SyncIndicator";
 import { formatDuration } from "../../../lib/format";
 
 export default function PlaylistPage() {
   const params = useParams();
   const id = params.id;
   const { user, loading: authLoading } = useAuth();
-  const { core, dispatch, ready } = useCore();
+  const { core, dispatch, ready, busy } = useCore();
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filterTab, setFilterTab] = useState("all");
@@ -148,6 +149,7 @@ export default function PlaylistPage() {
         onCancel={() => setConfirm(null)}
         onConfirm={runConfirm}
       />
+      <SyncIndicator busy={busy} />
       <div className="layout">
         <Sidebar
           playlist={playlist}

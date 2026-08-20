@@ -81,7 +81,13 @@ export default function LoginPage() {
             )}
 
             <button className="btn btn-primary btn-lg btn-block" type="submit" disabled={busy}>
-              {busy ? "Logging in…" : "Log in"}
+              {busy ? (
+                <>
+                  <span className="spinner spinner-sm" aria-hidden /> Logging in…
+                </>
+              ) : (
+                "Log in"
+              )}
             </button>
           </form>
 
