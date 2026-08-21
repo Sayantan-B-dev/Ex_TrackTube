@@ -681,6 +681,23 @@ a {
   color: var(--muted);
 }
 
+.section-label {
+  font-size: 11px;
+  color: var(--accent);
+  margin: 26px 0 14px;
+}
+
+.playlist-card-bottom {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.playlist-card-bottom .btn-block {
+  flex: 1;
+}
+
 /* ---------- progress bar ---------- */
 
 .progress-track {
