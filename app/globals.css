@@ -240,6 +240,24 @@ a {
   margin-bottom: 24px;
 }
 
+.page-head-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.section-divider {
+  border: none;
+  border-top: 3px dashed var(--border);
+  margin: 24px 0;
+}
+
+.playlist-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .page-head h1,
 .playlist-card-title,
 .main-bar-title,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import NavBar from "../../components/NavBar";
 import AddPlaylistModal from "../../components/AddPlaylistModal";
@@ -18,15 +18,68 @@ export default function PlaylistsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const [sortBy, setSortBy] = useState("last_viewed_desc");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Reload playlists when sort changes
+  useEffect(() => {
+    if (ready && user) {
+      // The playlists are loaded via useCore which doesn't currently support sort param
+      // We'll handle sorting client-side for now since useCore doesn't have sortBy
+      // TODO: add sortBy to useCore load
+    }
+  }, [sortBy, ready, user]);
+
   const handleAdd = (playlist, videos) =>
     dispatch({ type: "add", playlist, videos });
 
+  const handleCurrentlyWatching = (id, currentlyWatching) =>
+    dispatch({ type: "currentlyWatching", id, currentlyWatching });
+
   const deleting = deleteId ? playlists.find((p) => p.id === deleteId) : null;
+
+  // Group playlists: currently watching first, then others
+  const watchingPlaylists = playlists.filter((p) => p.isCurrentlyWatching);
+  const otherPlaylists = playlists.filter((p) => !p.isCurrentlyWatching);
+
+  // Client-side sort for other playlists (watching ones stay pinned at top)
+  const sortFn = (a, b) => {
+    switch (sortBy) {
+      case "time_asc":
+        return a.totalSeconds - b.totalSeconds;
+      case "time_desc":
+        return b.totalSeconds - a.totalSeconds;
+      case "title_asc":
+        return a.title.localeCompare(b.title);
+      case "title_desc":
+        return b.title.localeCompare(a.title);
+      case "added_desc":
+        return (b.addedAt || "").localeCompare(a.addedAt || "");
+      case "last_viewed_desc":
+      default:
+        // Sort by last_viewed_at desc, nulls last, fallback to added_at
+        const aTime = a.lastViewedAt ? new Date(a.lastViewedAt).getTime() : 0;
+        const bTime = b.lastViewedAt ? new Date(b.lastViewedAt).getTime() : 0;
+        if (aTime && bTime) return bTime - aTime;
+        if (aTime) return -1;
+        if (bTime) return 1;
+        return (b.addedAt || "").localeCompare(a.addedAt || "");
+    }
+  };
+
+  const sortedOther = [...otherPlaylists].sort(sortFn);
+  const sortedWatching = [...watchingPlaylists].sort((a, b) => {
+    // Sort watching by last_viewed_at desc
+    const aTime = a.lastViewedAt ? new Date(a.lastViewedAt).getTime() : 0;
+    const bTime = b.lastViewedAt ? new Date(b.lastViewedAt).getTime() : 0;
+    if (aTime && bTime) return bTime - aTime;
+    return (b.addedAt || "").localeCompare(a.addedAt || "");
+  });
+
+  const allSorted = [...sortedWatching, ...sortedOther];
 
   if (!mounted || authLoading || !ready) {
     return (
@@ -82,10 +135,21 @@ export default function PlaylistsPage() {
       <main className="container">
         <div className="page-head">
           <h1>Your playlists</h1>
-          <p>
-            Track your progress across any YouTube playlist. Everything is saved to
-            your account.
-          </p>
+          <div className="page-head-controls">
+            <select
+              className="btn"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              aria-label="Sort playlists"
+            >
+              <option value="last_viewed_desc">Last viewed ↓</option>
+              <option value="added_desc">Recently added ↓</option>
+              <option value="time_desc">Total time ↓</option>
+              <option value="time_asc">Total time ↑</option>
+              <option value="title_asc">Title A–Z</option>
+              <option value="title_desc">Title Z–A</option>
+            </select>
+          </div>
         </div>
 
         {playlists.length === 0 ? (
@@ -101,7 +165,7 @@ export default function PlaylistsPage() {
           </div>
         ) : (
           <div className="playlist-grid">
-            {playlists.map((p) => {
+            {allSorted.map((p, idx) => {
               const prog = core.progress[p.id] || { ids: [] };
               const markedSeconds = (core.data[p.id]?.videos || [])
                 .filter((v) => prog.ids.includes(v.id))
@@ -110,45 +174,64 @@ export default function PlaylistsPage() {
                 p.totalSeconds > 0
                   ? Math.round((markedSeconds / p.totalSeconds) * 100)
                   : 0;
+
+              // Add divider between watching and not-watching groups
+              const isFirstOther = p.isCurrentlyWatching === false && idx === sortedWatching.length;
+
               return (
-                <div className="playlist-card" key={p.id}>
-                  <div className="playlist-card-top">
-                    <Link href={`/playlists/${p.id}`} className="playlist-card-link">
-                      <h3 className="playlist-card-title">{p.title}</h3>
+                <Fragment key={p.id}>
+                  {isFirstOther && (
+                    <hr className="section-divider" key={`divider-${p.id}`} />
+                  )}
+                  <div className="playlist-card">
+                    <div className="playlist-card-top">
+                      <Link href={`/playlists/${p.id}`} className="playlist-card-link">
+                        <h3 className="playlist-card-title">{p.title}</h3>
+                      </Link>
+                      <div className="playlist-card-actions">
+                        <button
+                          className={`btn btn-icon ${p.isCurrentlyWatching ? "btn-primary" : ""}`}
+                          onClick={() => handleCurrentlyWatching(p.id, !p.isCurrentlyWatching)}
+                          aria-label={p.isCurrentlyWatching ? "Unmark as currently watching" : "Mark as currently watching"}
+                          title={p.isCurrentlyWatching ? "Currently watching" : "Mark as currently watching"}
+                        >
+                          {p.isCurrentlyWatching ? "▶" : "⏸"}
+                        </button>
+                        <button
+                          className="btn btn-icon btn-danger"
+                          onClick={() => setDeleteId(p.id)}
+                          aria-label="Delete playlist"
+                          title="Delete playlist"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                    <p className="playlist-card-channel">{p.channel}</p>
+                    <div className="playlist-card-stats">
+                      <span>{p.totalVideos} videos</span>
+                      <span>{formatDuration(p.totalSeconds)}</span>
+                      <span>{humanize(p.totalSeconds)}</span>
+                    </div>
+                    <div className="playlist-card-progress">
+                      <div className="progress-track">
+                        <div
+                          className="progress-fill"
+                          style={{ width: `${Math.max(pct, 2)}%` }}
+                        />
+                      </div>
+                      <div className="playlist-card-progress-meta">
+                        <span>
+                          {prog.ids.length} marked · {formatDuration(markedSeconds)}
+                        </span>
+                        <span>{pct}%</span>
+                      </div>
+                    </div>
+                    <Link href={`/playlists/${p.id}`} className="btn btn-block">
+                      Open →
                     </Link>
-                    <button
-                      className="btn btn-icon btn-danger"
-                      onClick={() => setDeleteId(p.id)}
-                      aria-label="Delete playlist"
-                      title="Delete playlist"
-                    >
-                      ✕
-                    </button>
                   </div>
-                  <p className="playlist-card-channel">{p.channel}</p>
-                  <div className="playlist-card-stats">
-                    <span>{p.totalVideos} videos</span>
-                    <span>{formatDuration(p.totalSeconds)}</span>
-                    <span>{humanize(p.totalSeconds)}</span>
-                  </div>
-                  <div className="playlist-card-progress">
-                    <div className="progress-track">
-                      <div
-                        className="progress-fill"
-                        style={{ width: `${Math.max(pct, 2)}%` }}
-                      />
-                    </div>
-                    <div className="playlist-card-progress-meta">
-                      <span>
-                        {prog.ids.length} marked · {formatDuration(markedSeconds)}
-                      </span>
-                      <span>{pct}%</span>
-                    </div>
-                  </div>
-                  <Link href={`/playlists/${p.id}`} className="btn btn-block">
-                    Open →
-                  </Link>
-                </div>
+                </Fragment>
               );
             })}
           </div>
