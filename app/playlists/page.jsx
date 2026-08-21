@@ -176,7 +176,7 @@ export default function PlaylistsPage() {
                   : 0;
 
               // Add divider between watching and not-watching groups
-              const isFirstOther = p.isCurrentlyWatching === false && idx === sortedWatching.length;
+              const isFirstOther = !p.isCurrentlyWatching && idx === sortedWatching.length && sortedWatching.length > 0;
 
               return (
                 <Fragment key={p.id}>
@@ -189,23 +189,15 @@ export default function PlaylistsPage() {
                         <h3 className="playlist-card-title">{p.title}</h3>
                       </Link>
                       <div className="playlist-card-actions">
-                        <button
-                          className={`btn btn-icon ${p.isCurrentlyWatching ? "btn-primary" : ""}`}
-                          onClick={() => handleCurrentlyWatching(p.id, !p.isCurrentlyWatching)}
-                          aria-label={p.isCurrentlyWatching ? "Unmark as currently watching" : "Mark as currently watching"}
-                          title={p.isCurrentlyWatching ? "Currently watching" : "Mark as currently watching"}
-                        >
-                          {p.isCurrentlyWatching ? "▶" : "⏸"}
-                        </button>
-                        <button
-                          className="btn btn-icon btn-danger"
-                          onClick={() => setDeleteId(p.id)}
-                          aria-label="Delete playlist"
-                          title="Delete playlist"
-                        >
-                          ✕
-                        </button>
-                      </div>
+                          <button
+                            className={`btn ${p.isCurrentlyWatching ? "btn-primary" : ""}`}
+                            onClick={() => handleCurrentlyWatching(p.id, !p.isCurrentlyWatching)}
+                            aria-label={p.isCurrentlyWatching ? "Unmark as currently watching" : "Mark as currently watching"}
+                            title={p.isCurrentlyWatching ? "Currently watching" : "Mark as currently watching"}
+                          >
+                            {p.isCurrentlyWatching ? "Currently watching" : "Not started"}
+                          </button>
+                        </div>
                     </div>
                     <p className="playlist-card-channel">{p.channel}</p>
                     <div className="playlist-card-stats">
