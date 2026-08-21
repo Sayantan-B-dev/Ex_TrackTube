@@ -142,3 +142,18 @@ playlist (`DELETE /api/playlists/[id]`) relies on the DB cascades — `playlist_
 - Rate limit is per IP as seen by the server; behind a proxy, set `X-Forwarded-For` correctly.
 - yt-dlp must be installed on the host.
 - Progress updates are optimistic; a failed PATCH leaves local state until the next reload.
+
+## Migration
+
+Run the following SQL once in your Supabase SQL Editor (idempotent — safe to re-run):
+
+```sql
+alter table public.playlists
+  add column if not exists is_currently_watching boolean not null default false,
+  add column if not exists last_viewed_at timestamptz;
+
+create index if not exists idx_playlists_last_viewed
+  on public.playlists (user_id, last_viewed_at desc);
+create index if not exists idx_playlists_currently_watching
+  on public.playlists (user_id) where is_currently_watching;
+```
