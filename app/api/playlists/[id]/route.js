@@ -1,4 +1,5 @@
 import { getUserFromRequest, jsonError } from "../../../../lib/auth";
+import { supabase } from "../../../../lib/supabase";
 import {
   getUserPlaylist,
   updatePlaylistProgress,
@@ -59,7 +60,27 @@ export async function PATCH(req, { params }) {
       return Response.json({ ok: true, title });
     }
 
-    return jsonError(400, "bad_request", "Send videoIds (array) or title to update.");
+    if (typeof body?.currentlyWatching === "boolean") {
+      const { error } = await supabase
+        .from("playlists")
+        .update({ is_currently_watching: body.currentlyWatching })
+        .eq("id", id)
+        .eq("user_id", authUser.id);
+      if (error) throw error;
+      return Response.json({ ok: true, currentlyWatching: body.currentlyWatching });
+    }
+
+    if (body?.touchLastViewed === true) {
+      const { error } = await supabase
+        .from("playlists")
+        .update({ last_viewed_at: new Date().toISOString() })
+        .eq("id", id)
+        .eq("user_id", authUser.id);
+      if (error) throw error;
+      return Response.json({ ok: true });
+    }
+
+    return jsonError(400, "bad_request", "Send videoIds (array), title, currentlyWatching (boolean), or touchLastViewed (true).");
   } catch (err) {
     if (err?.message === "not_found") {
       return jsonError(404, "not_found", "Playlist not found.");

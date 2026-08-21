@@ -11,8 +11,11 @@ export async function GET(req) {
     return jsonError(401, "unauthorized", "Missing or invalid token.");
   }
 
+  const { searchParams } = new URL(req.url);
+  const sortBy = searchParams.get("sort") || "last_viewed_desc";
+
   try {
-    const playlists = await listUserPlaylists(authUser.id);
+    const playlists = await listUserPlaylists(authUser.id, sortBy);
     return Response.json({ playlists });
   } catch {
     return jsonError(500, "db_error", "Could not load your playlists. Please try again.");

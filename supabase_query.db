@@ -38,7 +38,9 @@ create table if not exists public.playlists (
   total_videos integer not null default 0,
   total_seconds bigint not null default 0,
   added_at timestamptz not null default now(),
-  updated_at timestamptz
+  updated_at timestamptz,
+  is_currently_watching boolean not null default false,
+  last_viewed_at timestamptz
 );
 
 -- Videos inside a playlist
@@ -68,6 +70,12 @@ create index if not exists idx_playlist_videos_playlist
   on public.playlist_videos (playlist_id);
 create index if not exists idx_progress_playlist
   on public.progress (playlist_id);
+
+-- Currently watching / last viewed indexes
+create index if not exists idx_playlists_last_viewed
+  on public.playlists (user_id, last_viewed_at desc);
+create index if not exists idx_playlists_currently_watching
+  on public.playlists (user_id) where is_currently_watching;
 
 -- ---------- UPDATED_AT TRIGGER ----------
 
