@@ -29,6 +29,26 @@ export default function PlaylistPage() {
     setMounted(true);
   }, []);
 
+  // Track last viewed timestamp when playlist detail page mounts
+  useEffect(() => {
+    if (!user || !ready || !id) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/playlists/${id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("tracktube:token") || ""}`,
+          },
+          body: JSON.stringify({ touchLastViewed: true }),
+        });
+        if (!res.ok) throw new Error("network");
+      } catch (err) {
+        // silently fail — don't break the UI
+      }
+    })();
+  }, [user, ready, id]);
+
   const handleAdd = (playlist, videos) =>
     dispatch({ type: "add", playlist, videos });
 
