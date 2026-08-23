@@ -32,15 +32,31 @@ export default function PlaylistsPage() {
 
   const deleting = deleteId ? playlists.find((p) => p.id === deleteId) : null;
 
-  const watching = playlists
-    .filter((p) => p.isCurrentlyWatching)
+  const getProgress = (p) => {
+    const prog = core.progress[p.id] || { ids: [] };
+    const markedSeconds = (core.data[p.id]?.videos || [])
+      .filter((v) => prog.ids.includes(v.id))
+      .reduce((s, v) => s + (v.duration || 0), 0);
+    return p.totalSeconds > 0 ? Math.round((markedSeconds / p.totalSeconds) * 100) : 0;
+  };
+
+  const completed = playlists
+    .filter((p) => getProgress(p) === 100)
     .sort((a, b) => {
       const at = a.lastViewedAt ? new Date(a.lastViewedAt).getTime() : 0;
       const bt = b.lastViewedAt ? new Date(b.lastViewedAt).getTime() : 0;
       return bt - at;
     });
 
-  const others = playlists
+  const watching = playlists
+    .filter((p) => p.isCurrentlyWatching && getProgress(p) !== 100)
+    .sort((a, b) => {
+      const at = a.lastViewedAt ? new Date(a.lastViewedAt).getTime() : 0;
+      const bt = b.lastViewedAt ? new Date(b.lastViewedAt).getTime() : 0;
+      return bt - at;
+    });
+
+  const notStartedBase = playlists
     .filter((p) => !p.isCurrentlyWatching)
     .sort((a, b) => {
       switch (sortBy) {
@@ -65,6 +81,8 @@ export default function PlaylistsPage() {
         }
       }
     });
+
+  const notStarted = notStartedBase.filter((p) => getProgress(p) !== 100);
 
   if (!mounted || authLoading || !ready) {
     return (
@@ -165,15 +183,36 @@ export default function PlaylistsPage() {
               </>
             )}
 
-            {watching.length > 0 && others.length > 0 && (
+            {(watching.length > 0 || completed.length > 0) && completed.length > 0 && (
               <hr className="section-divider" />
             )}
 
-            {others.length > 0 && (
+            {completed.length > 0 && (
+              <>
+                <h2 className="section-label">Completed</h2>
+                <div className="playlist-grid">
+                  {completed.map((p) => (
+                    <PlaylistCard
+                      key={p.id}
+                      p={p}
+                      core={core}
+                      onToggleWatching={handleToggleWatching}
+                      onDelete={setDeleteId}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+
+            {(completed.length > 0 || notStarted.length > 0) && notStarted.length > 0 && (
+              <hr className="section-divider" />
+            )}
+
+            {notStarted.length > 0 && (
               <>
                 <h2 className="section-label">Not started</h2>
                 <div className="playlist-grid">
-                  {others.map((p) => (
+                  {notStarted.map((p) => (
                     <PlaylistCard
                       key={p.id}
                       p={p}
@@ -214,7 +253,7 @@ function PlaylistCard({ p, core, onToggleWatching, onDelete }) {
             className={`btn ${p.isCurrentlyWatching ? "btn-primary" : ""}`}
             onClick={() => onToggleWatching(p.id, !p.isCurrentlyWatching)}
           >
-            {p.isCurrentlyWatching ? "Currently watching" : "Not started"}
+            {pct === 100 ? "Completed" : p.isCurrentlyWatching ? "Currently watching" : "Not started"}
           </button>
         </div>
       </div>
