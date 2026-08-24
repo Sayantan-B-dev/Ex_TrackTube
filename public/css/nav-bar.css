@@ -1,0 +1,51 @@
+/* ---------- nav bar ---------- */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--panel);
+  border-bottom: 4px solid var(--border);
+  box-shadow: 0 4px 0 var(--shadow);
+}
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.navbar-brand:hover .navbar-logo {
+  animation: blink 0.4s steps(2) infinite;
+}
+
+.navbar-logo {
+  color: var(--accent);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.navbar-hamburger {
+  display: none;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+

@@ -1,0 +1,75 @@
+/* ---------- base ---------- */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "VT323", "Courier New", monospace;
+  font-size: 18px;
+  line-height: 1.4;
+  image-rendering: pixelated;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.35;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border: 3px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+h1,
+h2,
+h3,
+.btn,
+.tab,
+.navbar-brand,
+.side-section-title,
+.stat-label,
+.video-dur,
+.field-label,
+.main-bar-title,
+.theme-option-name {
+  font-family: "Press Start 2P", "Courier New", monospace;
+}
+
+a {
+  color: var(--accent);
+}
+

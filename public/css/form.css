@@ -1,0 +1,47 @@
+/* ---------- form ---------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.field-hint {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 3px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 18px;
+  font-family: "VT323", monospace;
+  outline: none;
+  border-radius: 0;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.input::placeholder {
+  color: var(--muted);
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

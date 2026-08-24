@@ -1,0 +1,250 @@
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("/fonts/press-start-2p.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VT323";
+  src: url("/fonts/vt323.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ---------- themes ---------- */
+
+:root,
+[data-theme="crt-green"] {
+  --bg: #0a0f0a;
+  --panel: #101710;
+  --border: #2a3a2a;
+  --text: #c8e6c8;
+  --muted: #6b8f6b;
+  --accent: #4ade80;
+  --selected: #166534;
+  --success: #a3e635;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="sunset"] {
+  --bg: #140d0a;
+  --panel: #1e1410;
+  --border: #3d271c;
+  --text: #ffd9b3;
+  --muted: #a97a5a;
+  --accent: #fb923c;
+  --selected: #9a3412;
+  --success: #fbbf24;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="ocean"] {
+  --bg: #070d13;
+  --panel: #0e1720;
+  --border: #1f3347;
+  --text: #cfe9f7;
+  --muted: #6b8fa3;
+  --accent: #38bdf8;
+  --selected: #075985;
+  --success: #34d399;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="blood"] {
+  --bg: #100809;
+  --panel: #1a0e10;
+  --border: #331c22;
+  --text: #f2c9cd;
+  --muted: #a0656d;
+  --accent: #ef4444;
+  --selected: #7f1d1d;
+  --success: #fbbf24;
+  --danger: #fca5a5;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="forest"] {
+  --bg: #080f0a;
+  --panel: #0f1a13;
+  --border: #22382a;
+  --text: #d3e8d8;
+  --muted: #7a9e85;
+  --accent: #22c55e;
+  --selected: #14532d;
+  --success: #84cc16;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="purple-haze"] {
+  --bg: #0e0a14;
+  --panel: #171028;
+  --border: #2e2148;
+  --text: #e5d9f5;
+  --muted: #9a85b8;
+  --accent: #a78bfa;
+  --selected: #5b21b6;
+  --success: #34d399;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="mono"] {
+  --bg: #050505;
+  --panel: #0d0d0d;
+  --border: #262626;
+  --text: #e8e8e8;
+  --muted: #8a8a8a;
+  --accent: #f5f5f5;
+  --selected: #333333;
+  --success: #b3b3b3;
+  --danger: #d4d4d4;
+  --shadow: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="candy"] {
+  --bg: #120812;
+  --panel: #1d0f1d;
+  --border: #3a2438;
+  --text: #ffd9ff;
+  --muted: #b07ab0;
+  --accent: #f472b6;
+  --selected: #831843;
+  --success: #4ade80;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="ember"] {
+  --bg: #120a07;
+  --panel: #1c120c;
+  --border: #38271c;
+  --text: #ffe8cc;
+  --muted: #b08968;
+  --accent: #f97316;
+  --selected: #7c2d12;
+  --success: #fbbf24;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="night-blue"] {
+  --bg: #050810;
+  --panel: #0b1220;
+  --border: #1d2c4a;
+  --text: #dbe6ff;
+  --muted: #7e8fb5;
+  --accent: #60a5fa;
+  --selected: #1e3a8a;
+  --success: #34d399;
+  --danger: #f87171;
+  --shadow: rgba(0, 0, 0, 0.65);
+}
+
+/* ---------- base ---------- */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "VT323", "Courier New", monospace;
+  font-size: 18px;
+  line-height: 1.4;
+  image-rendering: pixelated;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.35;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border: 3px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+h1,
+h2,
+h3,
+.btn,
+.tab,
+.navbar-brand,
+.side-section-title,
+.stat-label,
+.video-dur,
+.field-label,
+.main-bar-title,
+.theme-option-name {
+  font-family: "Press Start 2P", "Courier New", monospace;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* ---------- layout ---------- */
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 24px 80px;
+}
+
+.page-head {
+  margin-bottom: 24px;
+}
+
+.page-head-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.section-divider {
+  border: none;

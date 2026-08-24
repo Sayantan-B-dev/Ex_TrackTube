@@ -1,0 +1,211 @@
+/* ---------- sidebar analytics ---------- */
+
+.donut-wrap {
+  position: relative;
+  width: 170px;
+  margin: 0 auto 12px;
+}
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.donut-pct {
+  font-family: "Press Start 2P", monospace;
+  font-size: 15px;
+  color: var(--accent);
+}
+
+.donut-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+.legend-label {
+  color: var(--muted);
+  flex: 1;
+}
+
+.legend-value {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-card {
+  background: var(--bg);
+  border: 3px solid var(--border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-label {
+  font-size: 8px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.stat-hint {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.minibar-row {
+  display: grid;
+  grid-template-columns: 1fr 56px 48px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.minibar-label {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.minibar-track {
+  height: 10px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  overflow: hidden;
+}
+
+.minibar-fill {
+  height: 100%;
+  background: var(--accent);
+}
+
+.minibar-time {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tab {
+  padding: 9px 6px;
+  border: 3px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 8px;
+  cursor: pointer;
+  font-family: "Press Start 2P", monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 2px 2px 0 var(--shadow);
+}
+
+.tab:hover {
+  border-color: var(--accent);
+}
+
+.tab:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.tab-active {
+  border-color: var(--accent);
+  background: var(--selected);
+  color: var(--text);
+}
+
+.tab-count {
+  font-size: 13px;
+  font-family: "VT323", monospace;
+  color: var(--muted);
+}
+
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.save-note {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 3px dashed var(--border);
+  font-size: 15px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.main-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--bg);
+  padding: 12px 0;
+  margin-bottom: 16px;
+  border-bottom: 3px solid var(--border);
+  font-size: 17px;
+}
+
+.main-bar-title {
+  font-size: 10px;
+  color: var(--text);
+}
+
+.main-bar-info {
+  color: var(--muted);
+  font-size: 16px;
+}
+
