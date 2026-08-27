@@ -8,17 +8,19 @@ import { useAuth } from "../lib/useAuth";
 export default function NavBar({ onAddPlaylist }) {
   const { user, loading, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const close = () => setMenuOpen(false);
 
   return (
     <header className="navbar">
-      <Link href="/" className="navbar-brand" onClick={close}>
-        <span className="navbar-logo" aria-hidden>
-          ▓
-        </span>
-        <span>TrackTube</span>
-      </Link>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <ThemePicker />
+
+        <Link href="/" className="navbar-brand" onClick={close}>
+          <span>TrackTube</span>
+        </Link>
+      </div>
 
       <button
         className="navbar-hamburger"
@@ -33,7 +35,6 @@ export default function NavBar({ onAddPlaylist }) {
         <Link href="/about" className="btn">
           About
         </Link>
-        <ThemePicker />
         {loading ? null : user ? (
           <>
             <Link href="/playlists" className="btn">
@@ -44,9 +45,6 @@ export default function NavBar({ onAddPlaylist }) {
                 + Add playlist
               </button>
             )}
-            <span className="nav-user" title={user.username}>
-              ▸ {user.username}
-            </span>
             <button className="btn" onClick={logout}>
               Log out
             </button>
@@ -68,9 +66,7 @@ export default function NavBar({ onAddPlaylist }) {
           <Link href="/about" className="btn btn-block" onClick={close}>
             About
           </Link>
-          <div className="navbar-menu-theme">
-            <ThemePicker />
-          </div>
+
           {loading ? null : user ? (
             <>
               <Link href="/playlists" className="btn btn-block" onClick={close}>
@@ -87,9 +83,6 @@ export default function NavBar({ onAddPlaylist }) {
                   + Add playlist
                 </button>
               )}
-              <span className="nav-user" title={user.username}>
-                ▸ {user.username}
-              </span>
               <button className="btn btn-block" onClick={logout}>
                 Log out
               </button>

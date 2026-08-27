@@ -1,8 +1,8 @@
 /* ---------- buttons ---------- */
 
 .btn {
-  padding: 9px 16px;
-  border: 3px solid var(--border);
+  padding: 6px 10px;
+  border: 1px solid var(--border);
   border-radius: 0;
   background: var(--panel);
   color: var(--text);
@@ -13,8 +13,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  box-shadow: 3px 3px 0 var(--shadow);
+  box-shadow: 1px 1px 0 var(--shadow);
   transition: transform 0.05s, box-shadow 0.05s, border-color 0.15s;
   text-transform: uppercase;
   touch-action: manipulation;
@@ -43,8 +42,8 @@
 }
 
 .btn-icon {
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   flex-shrink: 0;
   font-size: 12px;
@@ -67,8 +66,8 @@
 }
 
 .btn-lg {
-  padding: 14px 24px;
-  font-size: 12px;
+  padding: 10px 20px;
+  font-size: 8px;
 }
 
 .btn-block {

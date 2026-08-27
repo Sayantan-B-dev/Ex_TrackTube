@@ -47,7 +47,6 @@ export default function ThemePicker() {
       >
         <span className="theme-swatch" style={{ background: current.swatch }} />
         <span className="theme-picker-name">{current.name}</span>
-        <span aria-hidden>▼</span>
       </button>
       {open && (
         <div className="theme-menu" role="menu">

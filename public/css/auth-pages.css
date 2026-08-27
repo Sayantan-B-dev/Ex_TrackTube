@@ -46,5 +46,9 @@
   max-width: 150px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  cursor: pointer;
+  background: var(--bg);
+  border: 3px solid var(--border);
+  box-shadow: 3px 3px 0 var(--shadow);
 }
 

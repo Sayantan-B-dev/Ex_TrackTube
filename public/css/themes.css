@@ -11,7 +11,7 @@
   --selected: #166534;
   --success: #a3e635;
   --danger: #f87171;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="sunset"] {
@@ -24,7 +24,7 @@
   --selected: #9a3412;
   --success: #fbbf24;
   --danger: #f87171;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="ocean"] {
@@ -37,7 +37,7 @@
   --selected: #075985;
   --success: #34d399;
   --danger: #f87171;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="blood"] {
@@ -50,7 +50,7 @@
   --selected: #7f1d1d;
   --success: #fbbf24;
   --danger: #fca5a5;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="forest"] {
@@ -63,7 +63,7 @@
   --selected: #14532d;
   --success: #84cc16;
   --danger: #f87171;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="purple-haze"] {
@@ -76,7 +76,7 @@
   --selected: #5b21b6;
   --success: #34d399;
   --danger: #f87171;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="mono"] {
@@ -102,7 +102,7 @@
   --selected: #831843;
   --success: #4ade80;
   --danger: #f87171;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="ember"] {
@@ -115,7 +115,7 @@
   --selected: #7c2d12;
   --success: #fbbf24;
   --danger: #f87171;
-  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow: none;
 }
 
 [data-theme="night-blue"] {

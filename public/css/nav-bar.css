@@ -21,6 +21,18 @@
   color: var(--text);
   text-decoration: none;
   font-size: 13px;
+  line-height: 1;
+}
+
+.navbar-brand .theme-picker {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+}
+
+.navbar-brand .theme-picker-btn {
+  margin-top: 0;
+  line-height: 1;
 }
 
 .navbar-brand:hover .navbar-logo {
@@ -31,6 +43,8 @@
   color: var(--accent);
   font-size: 18px;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
 }
 
 .navbar-hamburger {
@@ -41,6 +55,35 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.nav-user-dropdown {
+  position: relative;
+}
+
+.nav-user-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: var(--panel);
+  border: 3px solid var(--border);
+  box-shadow: 4px 4px 0 var(--shadow);
+  padding: 8px;
+  min-width: 140px;
+  z-index: 200;
+  display: none;
+}
+
+.nav-user-menu.open {
+  display: block;
+}
+
+.nav-user-dropdown:hover .nav-user-menu {
+  display: block;
+}
+
+.nav-user-menu .btn {
+  width: 100%;
 }
 
 @keyframes blink {
