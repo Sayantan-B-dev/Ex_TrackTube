@@ -119,6 +119,67 @@
   font-size: 9px;
 }
 
+.video-download-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.video-download {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 3px solid var(--border);
+  color: var(--accent);
+  font-size: 18px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.video-download:hover {
+  border-color: var(--accent);
+  background: var(--selected);
+  transform: scale(1.1);
+}
+
+.video-download:active {
+  transform: scale(0.95);
+}
+
+.video-download-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  background: var(--panel);
+  border: 3px solid var(--border);
+  box-shadow: 3px 3px 0 var(--shadow);
+  z-index: 100;
+  min-width: 130px;
+}
+
+.video-download-option {
+  display: block;
+  padding: 10px 14px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.video-download-option:hover {
+  background: var(--selected);
+  color: var(--accent);
+}
+
 .empty-text {
   text-align: center;
   color: var(--muted);

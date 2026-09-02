@@ -1,9 +1,27 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { formatDuration } from "../lib/format";
+
+const DOWNLOAD_SERVICES = [
+  { name: "Cobalt", url: (id) => `https://cobalt.tools/?url=https://www.youtube.com/watch?v=${id}` },
+  { name: "SSYouTube", url: (id) => `https://ssyoutube.com/watch?v=${id}` },
+  { name: "Y2Mate", url: (id) => `https://www.y2mate.com/youtube/${id}` },
+];
 
 export default function VideoList({ videos, markedIds, markedSeconds, onToggle }) {
   const marked = new Set(markedIds);
   const [playing, setPlaying] = useState(null);
+  const [openMenu, setOpenMenu] = useState(null);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpenMenu(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   return (
     <>
       <ul className="video-list">
@@ -45,6 +63,44 @@ export default function VideoList({ videos, markedIds, markedSeconds, onToggle }
                 </span>
               </span>
               <span className="video-status">{isMarked ? "Marked" : "Mark"}</span>
+              <span className="video-download-wrap" ref={openMenu === v.id ? menuRef : undefined}>
+                <span
+                  className="video-download"
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenMenu(openMenu === v.id ? null : v.id);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.stopPropagation();
+                      setOpenMenu(openMenu === v.id ? null : v.id);
+                    }
+                  }}
+                  title="Download video"
+                  aria-label={`Download ${v.title}`}
+                  aria-expanded={openMenu === v.id}
+                >
+                  ⬇
+                </span>
+                {openMenu === v.id && (
+                  <div className="video-download-menu">
+                    {DOWNLOAD_SERVICES.map((svc) => (
+                      <a
+                        key={svc.name}
+                        href={svc.url(v.id)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="video-download-option"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {svc.name}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </span>
             </button>
           </li>
         );
