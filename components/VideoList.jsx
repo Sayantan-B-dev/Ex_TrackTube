@@ -2,9 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { formatDuration } from "../lib/format";
 
 const DOWNLOAD_SERVICES = [
-  { name: "Cobalt", url: (id) => `https://cobalt.tools/?url=https://www.youtube.com/watch?v=${id}` },
   { name: "SSYouTube", url: (id) => `https://ssyoutube.com/watch?v=${id}` },
-  { name: "Y2Mate", url: (id) => `https://www.y2mate.com/youtube/${id}` },
 ];
 
 export default function VideoList({ videos, markedIds, markedSeconds, onToggle }) {
