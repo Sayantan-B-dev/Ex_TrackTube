@@ -1,4 +1,4 @@
-import { supabase } from "../../../../lib/supabase";
+import { query } from "../../../../lib/db";
 import { verifyPassword, signToken, jsonError } from "../../../../lib/auth";
 
 export const runtime = "nodejs";
@@ -19,15 +19,11 @@ export async function POST(req) {
       return jsonError(400, "missing_fields", "Username and password are required.");
     }
 
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("id, username, password_hash, created_at")
-      .eq("username", username)
-      .maybeSingle();
-
-    if (error) {
-      return jsonError(500, "db_error", "Could not look up the account. Please try again.");
-    }
+    const result = await query(
+      `SELECT id, username, password_hash, created_at FROM users WHERE username = $1`,
+      [username]
+    );
+    const user = result.rows[0];
 
     if (!user) {
       return jsonError(401, "invalid_credentials", "Invalid username or password.");

@@ -1,7 +1,7 @@
 import { getUserFromRequest, jsonError } from "../../../../lib/auth";
 import { createPlaylist } from "../../../../lib/playlistDb";
 import { validatePlaylistUrl } from "../../../../lib/playlist";
-import { supabase } from "../../../../lib/supabase";
+import { query } from "../../../../lib/db";
 
 export const runtime = "nodejs";
 
@@ -43,26 +43,19 @@ export async function POST(req) {
     position: i,
   }));
 
-  const { data: playlist, error } = await createPlaylist(authUser.id, {
+  const result = await createPlaylist(authUser.id, {
     url,
     title,
     channel,
     videos: payload,
   });
 
-  if (error) {
-    return jsonError(500, "db_error", "Could not save the playlist. Please try again.");
-  }
+  const playlist = result.rows[0];
 
-  const { data: savedVideos, error: videosError } = await supabase
-    .from("playlist_videos")
-    .select("id, youtube_id, title, duration, position")
-    .eq("playlist_id", playlist.id)
-    .order("position", { ascending: true });
-
-  if (videosError) {
-    return jsonError(500, "db_error", "Playlist created but videos could not be loaded.");
-  }
+  const savedVideos = await query(
+    `SELECT id, youtube_id, title, duration, position FROM playlist_videos WHERE playlist_id = $1 ORDER BY position ASC`,
+    [playlist.id]
+  );
 
   return Response.json(
     {
@@ -75,7 +68,7 @@ export async function POST(req) {
         total_seconds: playlist.total_seconds,
         added_at: playlist.added_at,
       },
-      videos: (savedVideos || []).map((v) => ({
+      videos: savedVideos.rows.map((v) => ({
         id: v.id,
         youtubeId: v.youtube_id,
         title: v.title,

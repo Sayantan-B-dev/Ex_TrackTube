@@ -1,4 +1,4 @@
-import { supabase } from "../../../../lib/supabase";
+import { query } from "../../../../lib/db";
 import { hashPassword, signToken, jsonError } from "../../../../lib/auth";
 
 export const runtime = "nodejs";
@@ -26,30 +26,21 @@ export async function POST(req) {
       return jsonError(400, "weak_password", "Password must be at least 6 characters long.");
     }
 
-    const { data: existing, error: dupError } = await supabase
-      .from("users")
-      .select("id")
-      .eq("username", username)
-      .maybeSingle();
-
-    if (dupError) {
-      return jsonError(500, "db_error", "Could not check the username. Please try again.");
-    }
-    if (existing) {
+    const existing = await query(
+      `SELECT id FROM users WHERE username = $1`,
+      [username]
+    );
+    if (existing.rows.length > 0) {
       return jsonError(409, "username_taken", "That username is already taken.");
     }
 
     const passwordHash = await hashPassword(password);
 
-    const { data: user, error } = await supabase
-      .from("users")
-      .insert({ username, password_hash: passwordHash })
-      .select("id, username, created_at")
-      .single();
-
-    if (error) {
-      return jsonError(500, "db_error", "Could not create the account. Please try again.");
-    }
+    const result = await query(
+      `INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING id, username, created_at`,
+      [username, passwordHash]
+    );
+    const user = result.rows[0];
 
     return Response.json(
       {

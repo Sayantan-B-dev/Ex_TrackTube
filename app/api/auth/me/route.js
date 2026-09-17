@@ -1,4 +1,4 @@
-import { supabase } from "../../../../lib/supabase";
+import { query } from "../../../../lib/db";
 import { getUserFromRequest, jsonError } from "../../../../lib/auth";
 
 export const runtime = "nodejs";
@@ -10,15 +10,12 @@ export async function GET(req) {
       return jsonError(401, "unauthorized", "Missing or invalid token.");
     }
 
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("id, username, created_at")
-      .eq("id", authUser.id)
-      .maybeSingle();
+    const result = await query(
+      `SELECT id, username, created_at FROM users WHERE id = $1`,
+      [authUser.id]
+    );
+    const user = result.rows[0];
 
-    if (error) {
-      return jsonError(500, "db_error", "Could not load the account. Please try again.");
-    }
     if (!user) {
       return jsonError(401, "unauthorized", "This account no longer exists.");
     }

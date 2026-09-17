@@ -1,10 +1,11 @@
 import { getUserFromRequest, jsonError } from "../../../../lib/auth";
-import { supabase } from "../../../../lib/supabase";
 import {
   getUserPlaylist,
   updatePlaylistProgress,
   renameUserPlaylist,
   deleteUserPlaylist,
+  updatePlaylistCurrentlyWatching,
+  touchLastViewed,
 } from "../../../../lib/playlistDb";
 
 export const runtime = "nodejs";
@@ -61,22 +62,12 @@ export async function PATCH(req, { params }) {
     }
 
     if (typeof body?.currentlyWatching === "boolean") {
-      const { error } = await supabase
-        .from("playlists")
-        .update({ is_currently_watching: body.currentlyWatching })
-        .eq("id", id)
-        .eq("user_id", authUser.id);
-      if (error) throw error;
+      await updatePlaylistCurrentlyWatching(authUser.id, id, body.currentlyWatching);
       return Response.json({ ok: true, currentlyWatching: body.currentlyWatching });
     }
 
     if (body?.touchLastViewed === true) {
-      const { error } = await supabase
-        .from("playlists")
-        .update({ last_viewed_at: new Date().toISOString() })
-        .eq("id", id)
-        .eq("user_id", authUser.id);
-      if (error) throw error;
+      await touchLastViewed(authUser.id, id);
       return Response.json({ ok: true });
     }
 
