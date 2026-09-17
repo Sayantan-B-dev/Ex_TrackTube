@@ -15,7 +15,7 @@
 
 | Var | Purpose |
 | --- | --- |
-| `NEON_DATABASE_URL` | NeonDB PostgreSQL connection string |
+| `NEON_DATABASE_URL` | NeonDB PostgreSQL connection string. If the URL contains query params with `&` (e.g., `sslmode=require&channel_binding=require`), URL-encode `&` as `%26` to avoid parsing errors |
 | `JWT_SECRET` | Secret that signs/verifies the app's own JWTs |
 | `JWT_EXPIRES_IN` | Token lifetime, default `7d` |
 | `RATE_LIMITING` | `"true"`/`"false"` — yt-dlp fetch rate limit |
