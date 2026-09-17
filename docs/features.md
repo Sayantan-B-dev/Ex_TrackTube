@@ -14,7 +14,7 @@
 - Paste a link — accepts `youtube.com/playlist?list=...`, `youtube.com/watch?v=...&list=...`, and `youtu.be` links.
 - Hit **Process**. The server runs `yt-dlp --flat-playlist --dump-json` and streams results back line-by-line over an NDJSON response.
 - A **live progress bar** shows `fetched X of Y videos` while streaming.
-- On completion the playlist metadata + videos are **saved to your account (Supabase)** — the modal closes and you stay on the current page.
+- On completion the playlist metadata + videos are **saved to your account (NeonDB)** — the modal closes and you stay on the current page.
 - Invalid links, empty/private playlists, network errors and rate limits all get friendly pixel-art error panels.
 
 ## 2. Playlist page
@@ -38,7 +38,7 @@ Two-pane layout:
 
 - Click any video card to mark/unmark it.
 - All totals recalculate instantly: marked time, time left, progress %.
-- Progress is saved on every change — to your account in Supabase (`PATCH /api/playlists/[id]`).
+- Progress is saved on every change — to your account in NeonDB (`PATCH /api/playlists/[id]`).
 
 ## 4. Playlists home
 

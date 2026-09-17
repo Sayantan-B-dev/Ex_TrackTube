@@ -157,7 +157,7 @@ Every issue encountered during development, root cause, and the fix. Each entry 
 - `lib/useCore.js` loads `emptyCore` when signed out and `dispatch` is a no-op — no client persistence of any playlist data; signed-in actions map to the API.
 - Private routes (`/playlists`, `/playlists/[id]`) render a `LoginRequired` gate ("Log in first") when signed out.
 - Browsers with old `tracktube:core` data simply ignore it (key no longer read).
-- Cascade deletes confirmed in `supabase_query.db` (`playlist_videos` and `progress` FKs are `ON DELETE CASCADE`), so deleting a playlist removes its videos and progress from the DB automatically.
+- Cascade deletes confirmed in `neon_migration.sql` (`playlist_videos` and `progress` FKs are `ON DELETE CASCADE`), so deleting a playlist removes its videos and progress from the DB automatically.
 
 ## 18. Mobile nav overflow
 

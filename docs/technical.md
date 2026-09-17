@@ -7,7 +7,7 @@
 | Framework | Next.js 15.5 (App Router) |
 | UI | React 19, plain CSS (no UI library) |
 | Extraction | yt-dlp via `child_process.spawn` (server-side) |
-| Storage | Supabase (Postgres), account-scoped — no client-side playlist storage |
+| Storage | NeonDB (PostgreSQL 18), account-scoped — no client-side playlist storage |
 | Auth | Custom: bcrypt-hashed passwords + JWT (`jsonwebtoken`) |
 | Fonts | Press Start 2P + VT323 (self-hosted in `public/fonts`) |
 
@@ -15,16 +15,14 @@
 
 | Var | Purpose |
 | --- | --- |
-| `SUPABASE_URL` | Project URL (Settings → API) |
-| `SUPABASE_ANON_KEY` | Public anon key (kept for Supabase clients) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only key (bypasses RLS) — never client-side |
+| `NEON_DATABASE_URL` | NeonDB PostgreSQL connection string |
 | `JWT_SECRET` | Secret that signs/verifies the app's own JWTs |
 | `JWT_EXPIRES_IN` | Token lifetime, default `7d` |
 | `RATE_LIMITING` | `"true"`/`"false"` — yt-dlp fetch rate limit |
 
-## Supabase schema
+## NeonDB schema
 
-Run `supabase_query.db` once in the Supabase SQL Editor (idempotent — safe to re-run).
+Run `neon_migration.sql` once in your NeonDB SQL Editor (idempotent — safe to re-run).
 
 | Table | Purpose |
 | --- | --- |
@@ -33,8 +31,8 @@ Run `supabase_query.db` once in the Supabase SQL Editor (idempotent — safe to 
 | `playlist_videos` | `id uuid PK`, `playlist_id FK → playlists CASCADE`, `youtube_id`, title, duration, position; UNIQUE (`playlist_id`, `youtube_id`) |
 | `progress` | marked videos: composite PK (`playlist_id`, `video_id`), `marked_at` |
 
-- **RLS is enabled on every table with no policies** — the anon/authenticated roles can't read or write anything. The server talks to the DB with the service-role key, which bypasses RLS.
-- **RPCs** (transactional): `create_playlist(p_user_id, p_url, p_title, p_channel, p_videos jsonb)` inserts the playlist + all videos in one transaction; `set_progress(p_user_id, p_playlist_id, p_youtube_ids text[])` replaces the marked set atomically (ids are YouTube IDs, translated to uuids inside).
+- **RLS is not enforced** — the server talks directly to the DB using the connection string. Authorization is handled entirely at the application layer (every query is scoped by `user_id`).
+- **Functions** (transactional): `create_playlist(p_user_id, p_url, p_title, p_channel, p_videos jsonb)` inserts the playlist + all videos in one transaction; `set_progress(p_user_id, p_playlist_id, p_youtube_ids text[])` replaces the marked set atomically (ids are YouTube IDs, translated to uuids inside).
 - Triggers keep `updated_at` fresh on `users` and `playlists`.
 
 ## Auth flow (bcrypt + JWT)
@@ -54,15 +52,15 @@ Every API: Authorization: Bearer <jwt> → jwt.verify → user id
 
 ```
 Browser (AddPlaylistModal)           Server (app/api/playlists/route.js)          yt-dlp
-─────────────────────────            ─────────────────────────────────────          ──────
+────────────────────────            ─────────────────────────────────────          ──────
 POST /api/playlists {url} ───────▶  validatePlaylistUrl()
-                                     400 if invalid (no rate-limit slot used)
-                                     checkRateLimit(ip) ──▶ 429 if throttled
-                                     spawn yt-dlp --flat-playlist --dump-json ──▶ stdout NDJSON
+                                      400 if invalid (no rate-limit slot used)
+                                      checkRateLimit(ip) ──▶ 429 if throttled
+                                      spawn yt-dlp --flat-playlist --dump-json ──▶ stdout NDJSON
 ◀── progress {fetched,total} ─────  enqueue per parsed line
 ◀── done {playlist, videos} ──────  recordFetch(ip) [only on success]
-   POST /api/playlists/save {title, url, channel, videos[]}   (auth required)
-       → RPC create_playlist → 201 {playlist, videos[with uuids]}
+    POST /api/playlists/save {title, url, channel, videos[]}   (auth required)
+        → create_playlist function → 201 {playlist, videos[with uuids]}
 ◀── modal closes — stays on the current page (list stays in /playlists)
 ```
 
@@ -73,7 +71,7 @@ parsed line yields a `progress` message; the final line is `done` or `error`.
 
 The whole app is **account-only**: signed out, `useCore` loads `emptyCore`, `ready` becomes
 true and `dispatch` is a no-op — nothing is persisted on the client. Playlists, videos and
-progress live exclusively in Supabase (see schema). Client shape after `GET /api/playlists`:
+progress live exclusively in NeonDB (see schema). Client shape after `GET /api/playlists`:
 
 ```jsonc
 {
@@ -97,9 +95,9 @@ playlist (`DELETE /api/playlists/[id]`) relies on the DB cascades — `playlist_
 | --- | --- |
 | `lib/playlist.js` | `validatePlaylistUrl`, `fetchPlaylist(url, onProgress)` — spawns yt-dlp, stream-parses NDJSON with `readline`, re-fetches any video missing a duration (batches of 25, `--no-playlist`), builds the final JSON |
 | `lib/rateLimit.js` | File-persisted per-IP window (1/hour). `ENABLED = process.env.RATE_LIMITING === "true"` |
-| `lib/supabase.js` | Lazy server-only service-role client (`@supabase/supabase-js`); throws a readable error if env vars are missing |
+| `lib/db.js` | PostgreSQL connection pool (`pg`) using `NEON_DATABASE_URL` |
 | `lib/auth.js` | `hashPassword` / `verifyPassword` (bcryptjs, 10 rounds), `signToken` / `verifyToken` (jsonwebtoken), `getUserFromRequest`, `jsonError` |
-| `lib/playlistDb.js` | `listUserPlaylists` (embeds videos + marked YouTube IDs), `getUserPlaylist`, `createPlaylist` (RPC), `updatePlaylistProgress` (RPC, delete+insert fallback for stale schema cache), `renameUserPlaylist`, `deleteUserPlaylist` |
+| `lib/playlistDb.js` | `listUserPlaylists` (raw SQL joins), `getUserPlaylist`, `createPlaylist` (function call), `updatePlaylistProgress` (function call, delete+insert fallback), `renameUserPlaylist`, `deleteUserPlaylist`, `updatePlaylistCurrentlyWatching`, `touchLastViewed` |
 | `app/api/playlists/route.js` | GET: auth + list; POST: validate → rate-limit → stream yt-dlp progress → done/error |
 
 ## Client modules
@@ -145,7 +143,7 @@ playlist (`DELETE /api/playlists/[id]`) relies on the DB cascades — `playlist_
 
 ## Migration
 
-Run the following SQL once in your Supabase SQL Editor (idempotent — safe to re-run):
+Run the following SQL once in your NeonDB SQL Editor (idempotent — safe to re-run):
 
 ```sql
 alter table public.playlists

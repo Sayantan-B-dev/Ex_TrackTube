@@ -34,20 +34,20 @@ nextjsread/
 │       ├── Donut.jsx
 │       └── MiniBar.jsx
 ├── lib/
-│   ├── playlist.js                 Server: yt-dlp orchestration
-│   ├── rateLimit.js                Server: file-persisted per-IP window
-│   ├── supabase.js                 Server: lazy service-role client (throws if env missing)
-│   ├── auth.js                     Server: bcrypt hash/verify + JWT sign/verify + request user
-│   ├── playlistDb.js               Server: Supabase queries + RPC calls for playlist CRUD
-│   ├── storage.js                  Client: pure core-JSON operations (anonymous mode)
-│   ├── useCore.js                  Client: reducer hook; Supabase-backed when logged in
-│   ├── useAuth.js                  Client: AuthProvider + useAuth (token, login/register/logout)
-│   ├── format.js                   Time formatting helpers
-│   └── themes.js                   10 theme definitions + persistence
-├── supabase_query.db               SQL schema + RPCs for the Supabase SQL Editor
+│   ├── db.js                     Server: PostgreSQL pool (pg) using NEON_DATABASE_URL
+│   ├── playlist.js               Server: yt-dlp orchestration
+│   ├── rateLimit.js              Server: file-persisted per-IP window
+│   ├── auth.js                   Server: bcrypt hash/verify + JWT sign/verify + request user
+│   ├── playlistDb.js             Server: raw SQL queries and function calls for playlist CRUD
+│   ├── storage.js                Client: pure core-JSON operations (anonymous mode)
+│   ├── useCore.js                Client: reducer hook; DB-backed when logged in
+│   ├── useAuth.js                Client: AuthProvider + useAuth (token, login/register/logout)
+│   ├── format.js                 Time formatting helpers
+│   └── themes.js                 10 theme definitions + persistence
+├── neon_migration.sql            SQL schema and functions for NeonDB
 ├── public/
-│   └── fonts/                      press-start-2p.woff2, vt323.woff2
-└── .env.example                    Supabase URL/keys, JWT secret, RATE_LIMITING
+│   └── fonts/                    press-start-2p.woff2, vt323.woff2
+└── .env.example                  NEON_DATABASE_URL, JWT secret, RATE_LIMITING
 ```
 
 ## Key functions
@@ -77,37 +77,27 @@ nextjsread/
    - `{"type":"done","data":{playlist,videos}}` (after `recordFetch(ip)`)
    - `{"type":"error","message":string}` on any failure (HTTP stays 200 — the status is inside the stream).
 
-### `lib/supabase.js` (server)
+### `lib/db.js` (server)
 
-`createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)` exported as a lazy `Proxy` — options
-(`auth.persistSession: false`) fixed; if either env var is missing the proxy throws a readable
-error on first use (so `next build` works before `.env.local` is filled).
-
-### `lib/auth.js` (server)
-
-| Function | Behavior |
-| --- | --- |
-| `hashPassword(pw)` / `verifyPassword(pw, hash)` | bcryptjs, 10 rounds |
-| `signToken(user)` | `jwt.sign({username}, JWT_SECRET, {subject: user.id, expiresIn: JWT_EXPIRES_IN})` |
-| `verifyToken(token)` | Throws on invalid/expired |
-| `getUserFromRequest(req)` | Extracts `Bearer` header, verifies → `{id, username}` or `null` |
-| `jsonError(status, code, message)` | Uniform `Response.json({error, message})` |
+PostgreSQL connection pool (`pg`) using `NEON_DATABASE_URL`. Exports `query`, `getRow`, `getRows`, `exec`.
 
 ### `lib/playlistDb.js` (server)
 
 | Function | Behavior |
 | --- | --- |
-| `listUserPlaylists(userId)` | Playlists + videos + marked rows in one query; uses the explicit FK embed `playlist_videos!playlist_videos_playlist_id_fkey(...)` because `progress` creates a second relationship path |
+| `listUserPlaylists(userId)` | Playlists + videos + marked rows via raw SQL joins |
 | `getUserPlaylist(userId, id)` | Single playlist + videos + `markedIds` (uuids) |
-| `createPlaylist(userId, {url,title,channel,videos})` | RPC `create_playlist` (atomic insert of playlist + videos) |
-| `updatePlaylistProgress(userId, id, youtubeIds)` | RPC `set_progress(text[])`; on `PGRST202` (stale PostgREST schema cache) falls back to delete + insert |
+| `createPlaylist(userId, {url,title,channel,videos})` | Calls `create_playlist` SQL function (atomic insert of playlist + videos) |
+| `updatePlaylistProgress(userId, id, youtubeIds)` | Calls `set_progress(text[])` SQL function; falls back to delete + insert on failure |
 | `renameUserPlaylist(userId, id, title)` | Update title, returns `false` when not found |
 | `deleteUserPlaylist(userId, id)` | Delete row (FKs cascade videos + progress) |
+| `updatePlaylistCurrentlyWatching(userId, id, val)` | Update `is_currently_watching` flag |
+| `touchLastViewed(userId, id)` | Update `last_viewed_at` timestamp |
 
 ### `app/api/playlists/save/route.js`
 
 Auth required. Body `{url, title, channel, videos:[{youtubeId,title,duration}]}` → validation →
-`createPlaylist` RPC → refetch the video rows ordered by `position` → `201 {playlist, videos}`.
+`createPlaylist` function → refetch the video rows ordered by `position` → `201 {playlist, videos}`.
 
 ### `app/api/playlists/[id]/route.js`
 

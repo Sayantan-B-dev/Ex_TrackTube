@@ -36,7 +36,7 @@ export default function Home() {
   const features = [
     ["➕", "Paste any playlist", "Drop a YouTube playlist link — metadata is streamed in server-side via yt-dlp with a live progress bar."],
     ["⏱️", "Live totals", "Mark videos and watch marked time, time left and progress % update instantly."],
-    ["🗄️", "Private cloud", "Account-bound storage on Supabase — your playlists, videos and progress stay yours."],
+    ["🗄️", "Private cloud", "Account-bound storage on NeonDB — your playlists, videos and progress stay yours."],
     ["📊", "Analytics", "Donut chart, longest-videos breakdown, marked vs remaining stats per playlist."],
     ["🎨", "10 themes", "CRT Green, Ocean, Blood, Candy and more — pick your pixel palette."],
     ["🔍", "Search & filter", "Find any video by title, tab through All / Marked / Not marked."],

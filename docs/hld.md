@@ -8,7 +8,7 @@ flowchart LR
     W -->|"spawn + stream NDJSON"| Y[yt-dlp]
     Y -->|"video metadata"| W
     W -->|"register/login (bcrypt + JWT)"| A[Auth API]
-    A -->|"store hash / verify"| DB[(Supabase Postgres)]
+    A -->|"store hash / verify"| DB[(NeonDB Postgres)]
     W -->|"CRUD playlists/progress"| DB
     U -->|"JWT token in localStorage"| W
     W -->|"rate-limit check"| RL[(temp file: rate-limit.json)]
@@ -16,8 +16,7 @@ flowchart LR
 
 Account-only storage:
 
-- **Signed in**: playlists, videos and progress live in **Supabase** (user-scoped rows, RLS
-  locked down; server talks via the service-role key). Auth is self-made: bcrypt-hashed
+- **Signed in**: playlists, videos and progress live in **NeonDB** (user-scoped rows; authorization handled at the application layer). Auth is self-made: bcrypt-hashed
   passwords + JWT (token is the only thing stored in the browser).
 - **Signed out**: nothing is stored — `useCore` runs an empty no-op core and private pages
   (`/playlists`, `/playlists/[id]`) render a "Log in first" gate.
@@ -48,8 +47,7 @@ flowchart TD
         API --> FETCH[fetchPlaylist]
         FETCH --> Y[yt-dlp child process]
         API --> AUTHAPI[Auth + CRUD handlers]
-        AUTHAPI --> SUP[lib/supabase service-role client]
-        SUP --> DB[(Supabase Postgres)]
+        AUTHAPI --> DB[(NeonDB Postgres)]
     end
 ```
 
@@ -88,12 +86,12 @@ sequenceDiagram
 sequenceDiagram
     participant V as VideoList/Sidebar
     participant C as useCore
-    participant S as Supabase
+    participant S as NeonDB
 
     V->>C: dispatch(toggle | markAll | clear)
     C->>C: optimistic reducer update (instant UI)
     C->>S: PATCH /api/playlists/[id] {videoIds}
-    S->>S: set_progress RPC (atomic replace)
+    S->>S: set_progress function (atomic replace)
     S-->>C: {ok, markedCount}
 ```
 
@@ -105,7 +103,7 @@ Every toggle replaces the full marked set, so the DB always ends up consistent w
 flowchart LR
     FE[Next.js standalone] --> OS[Host with yt-dlp installed]
     OS --> FS[OS temp dir for rate-limit file]
-    OS --> DB[(Supabase project — tables from supabase_query.db)]
+    OS --> DB[(NeonDB — tables from neon_migration.sql)]
 ```
 
 ## Security & limits
@@ -113,7 +111,7 @@ flowchart LR
 - **Passwords**: never stored — bcrypt (10 rounds) hashes only.
 - **Sessions**: JWT signed with `JWT_SECRET` (env, never committed); `/api/auth/me` validates on restore; expired/invalid tokens → `401` → auto logout.
 - **Authorization**: every CRUD route re-derives the user from the token server-side and scopes all queries by `user_id`.
-- **Database**: RLS enabled on all four tables with no public policies — only the server's service-role key can touch the data.
+- **Database**: application-layer authorization scopes all queries by `user_id`.
 - **Rate limiting**: 1 successful fetch/hour/IP, persisted to disk (survives restarts), env-toggleable (`RATE_LIMITING`).
 - **Input validation**: server-side URL validation before any work; invalid input costs no rate-limit slot.
 - **Client safety**: only YouTube video IDs are used in thumbnail URLs; playlist data is inert JSON.

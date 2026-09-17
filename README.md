@@ -6,7 +6,7 @@
 
 Track your progress across any YouTube playlist — with a retro pixel-art UI.
 
-Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-dlp**, and lets you mark videos as watched while live-counting your marked time, remaining time and progress. Create an account and everything is stored privately in the **cloud (Supabase)** — signed out, nobody sees your playlists.
+Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-dlp**, and lets you mark videos as watched while live-counting your marked time, remaining time and progress. Create an account and everything is stored privately in the **cloud (NeonDB)** — signed out, nobody sees your playlists.
 
 ## Screenshots
 
@@ -18,7 +18,7 @@ Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-d
 
 - ➕ **Add any YouTube playlist** — paste a link, watch a live progress bar while metadata streams in
 - 🔐 **Accounts** — register with a username; passwords are hashed with **bcrypt**, sessions are basic **JWT** tokens
-- 🗄️ **Private cloud (Supabase)** — playlists, videos and progress are account-scoped in Postgres with row-level security; playlists are locked behind login
+- 🗄️ **Private cloud (NeonDB)** — playlists, videos and progress are account-scoped in PostgreSQL with row-level security; playlists are locked behind login
 - 📊 **Analytics sidebar** — animated donut chart (marked vs remaining), total/marked/time-left stats, longest-videos breakdown
 - ⏱️ **Live time totals** — select videos and the marked time & time left update instantly (`H:MM:SS` + humanized)
 - 🔍 **Filters** — search by title, tabs for All / Marked / Not marked
@@ -33,7 +33,7 @@ Paste any YouTube playlist link, TrackTube fetches all video metadata via **yt-d
 
 - **Next.js 15** (App Router) + React 19
 - **yt-dlp** — server-side playlist metadata extraction (streamed, no temp files)
-- **Supabase** — Postgres database for registered users (`users`, `playlists`, `playlist_videos`, `progress`)
+- **NeonDB (PostgreSQL)** — Postgres database for registered users (`users`, `playlists`, `playlist_videos`, `progress`)
 - **bcryptjs + jsonwebtoken** — password hashing and JWT sessions (token storage only, no local playlist data)
 
 ## Quick Start
@@ -46,9 +46,9 @@ npm run dev                  # http://localhost:3000
 
 Accounts + cloud storage are required for playlists:
 
-1. Create a project at [supabase.com](https://supabase.com)
-2. Open **SQL Editor → New query**, paste the entire contents of `supabase_query.db`, click **Run**
-3. Fill `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` and `JWT_SECRET` in `.env.local`
+1. Open your NeonDB dashboard → SQL Editor
+2. Paste the entire contents of `neon_migration.sql`, click **Run**
+3. Fill `NEON_DATABASE_URL` and `JWT_SECRET` in `.env.local`
 
 Requires [yt-dlp](https://github.com/yt-dlp/yt-dlp) on the host machine (`yt-dlp --version`).
 
