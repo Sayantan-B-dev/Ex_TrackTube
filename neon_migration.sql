@@ -1,20 +1,19 @@
 -- ============================================================
--- TrackTube — Supabase schema (users + playlists CRUD)
+-- TrackTube — PostgreSQL schema (NeonDB compatible)
 -- ------------------------------------------------------------
 -- HOW TO USE:
---   1. Open your Supabase project -> SQL Editor -> New query
+--   1. Open your NeonDB dashboard → SQL Editor
 --   2. Copy the ENTIRE contents of this file and paste it
 --   3. Click "Run"
 --
 -- HOW AUTH WORKS:
---   • Users register with a username + password.
---   • The app hashes the password with bcrypt and stores ONLY
---     the hash in `users.password_hash` (never the plain text).
---   • On login the app signs a JWT (secret = JWT_SECRET in .env).
---   • Every CRUD request sends `Authorization: Bearer <jwt>`.
---   • The database is reached server-side with the service_role
---     key, which bypasses RLS — so RLS is enabled to lock the
---     tables down for everyone else (anon/authenticated = 0 rows).
+--   Users register with a username + password.
+--   The app hashes the password with bcrypt and stores ONLY
+--   the hash in `users.password_hash` (never the plain text).
+--   On login the app signs a JWT (secret = JWT_SECRET in .env).
+--   Every CRUD request sends `Authorization: Bearer <jwt>`.
+--   The database is reached server-side with the NEON_DATABASE_URL
+--   connection string.
 -- ============================================================
 
 -- ---------- TABLES ----------
@@ -102,8 +101,6 @@ create trigger trg_playlists_updated_at
 -- ---------- RPC FUNCTIONS (used by the CRUD API) ----------
 
 -- Create a playlist + all its videos in a single transaction.
--- NOT security definer: anon callers are still blocked by RLS,
--- the server calls it with the service_role key (bypasses RLS).
 create or replace function public.create_playlist(
   p_user_id uuid,
   p_url text,
@@ -175,24 +172,7 @@ begin
 end;
 $$;
 
--- ---------- ROW LEVEL SECURITY ----------
-
--- Enable RLS on every table. The app talks to the DB with the
--- service_role key (server-side only), which bypasses RLS.
--- No policies are granted, so anonymous users / the anon key
--- can never read or write anything directly.
-alter table public.users enable row level security;
-alter table public.playlists enable row level security;
-alter table public.playlist_videos enable row level security;
-alter table public.progress enable row level security;
-
--- Revoke default privileges from anon/authenticated roles as extra hardening
-revoke all on table public.users from anon, authenticated;
-revoke all on table public.playlists from anon, authenticated;
-revoke all on table public.playlist_videos from anon, authenticated;
-revoke all on table public.progress from anon, authenticated;
-
--- ---------- USEFUL QUERIES (for testing in the SQL editor) ----------
+-- ---------- USEFUL QUERIES (for testing) ----------
 
 -- All users
 -- select id, username, created_at from public.users order by created_at desc;
